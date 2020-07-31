@@ -24,6 +24,7 @@
     "publish:patch": "run-s version:patch git:push",
     "publish:minor": "run-s version:minor git:push",
     "publish:major": "run-s version:major git:push",
+    "repos": "bin/repos.js",
     "sites": "node bin/sites.js",
     "test": "run-p --aggregate-output test:**",
     "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 95 --output-dir var/coverage/flow",
@@ -52,7 +53,9 @@
       }
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "@octokit/graphql": "^4.5.3"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.7.4",
