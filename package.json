@@ -1,13 +1,13 @@
 {
-  "name": "package-template",
+  "name": "vulnerable-repos",
   "version": "0.0.0",
-  "description": "Scaffolding for an Library Package",
-  "repository": "https://github.com/CumulusDS/package-template",
+  "description": "List the repos with vulnerability alerts",
+  "repository": "https://github.com/CumulusDS/vulnerable-repos",
   "author": "Cumulus Digital Systems",
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "^10.15 || ^12.13 || ^13.8 || ^14.0"
+    "node": ">=10"
   },
   "main": "lib/index.js",
   "src": [
