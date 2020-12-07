@@ -1,40 +1,81 @@
 // @flow
 
-import SitesClient from "../../src";
+import main from "../../src";
 
-function mockCloudFormation() {
-  const listExports = jest
+jest.mock("@octokit/graphql", () => ({
+  graphql: jest
     .fn()
-    .mockReturnValueOnce({
-      promise: jest.fn().mockResolvedValue({
-        Exports: [{ Name: "foo", Value: "bar" }],
-        NextToken: "token"
-      })
-    })
-    .mockReturnValueOnce({
-      promise: jest.fn().mockResolvedValue({
-        Exports: [
-          {
-            Name: "StsSiteName-neverland-test",
-            Value: "neverland-test"
+    .mockReturnValueOnce(
+      Promise.resolve({
+        organization: {
+          repositories: {
+            pageInfo: { endCursor: "endCursor-1", hasNextPage: true },
+            nodes: [
+              { name: "repo-1", vulnerabilityAlerts: { nodes: [] } },
+              {
+                name: "repo-2",
+                vulnerabilityAlerts: {
+                  nodes: [
+                    {
+                      dismissedAt: "2020-10-22T01:35:51Z",
+                      securityVulnerability: {
+                        advisory: { ghsaId: "id-1", summary: "summary-1" },
+                        severity: "HIGH"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
-        ],
-        NextToken: null
+        }
       })
-    });
-  return { listExports };
-}
+    )
+    .mockReturnValueOnce(
+      Promise.resolve({
+        organization: {
+          repositories: {
+            pageInfo: { endCursor: "endCursor-2", hasNextPage: false },
+            nodes: [
+              {
+                name: "repo-3",
+                vulnerabilityAlerts: {
+                  nodes: [
+                    {
+                      dismissedAt: null,
+                      securityVulnerability: {
+                        advisory: { ghsaId: "id-2", summary: "summary-2" },
+                        severity: "HIGH"
+                      }
+                    },
+                    {
+                      dismissedAt: null,
+                      securityVulnerability: {
+                        advisory: { ghsaId: "id-3", summary: "summary-3" },
+                        severity: "LOW"
+                      }
+                    },
+                    {
+                      dismissedAt: null,
+                      securityVulnerability: {
+                        advisory: { ghsaId: "id-4", summary: "summary-4" },
+                        severity: "HIGH"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      })
+    )
+}));
 
-describe("Sites Client", () => {
-  it("includes neverland-test", () => {
-    const sitesClient = new SitesClient(mockCloudFormation());
-    return expect(sitesClient.getNames()).resolves.toEqual(expect.arrayContaining(["neverland-test"]));
+describe("vulnerable-repos", () => {
+  beforeAll(() => {
+    delete process.env.GITHUB_TOKEN;
   });
 
-  it("loads pages", async () => {
-    const cloudFormation = mockCloudFormation();
-    const sitesClient = new SitesClient(cloudFormation);
-    await sitesClient.getNames();
-    expect(cloudFormation.listExports.mock.calls.length).toBe(2);
-  });
+  it("resolves", () => expect(main()).resolves.toBeUndefined());
 });

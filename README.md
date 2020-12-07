@@ -1,26 +1,36 @@
-# Package Template
+# Vulnerable Repos
 
-This is a basic template for Cumulus library packages.
+List the repositories owned by an organization that have a vulnerability alert.
 
-You can use the template by cloning the template project from https://github.com/CumulusDS/package-template and unpacking into a new directory. Remember to update package.json, appveyor.yml and this documentation with the name and purpose of your new project. Create a new repo on GitHub for the new project. Connect your local repo to the new GitHub repo by changing the origin:
+To access private repositories, set the GITHUB_TOKEN environment variable with a [GitHub personal access token].
 
-1. Use the [package-template](https://github.com/CumulusDS/package-template) to create a GitHub repo for the new package.
-2. Configure standard secrets with the GitHub repo https://github.com/CumulusDS/REPOSITORY/settings/secrets
-    - `SLACK_WEBHOOK`
-    - `NODE_AUTH_TOKEN`
-3. Clone the new repo.
-    ```bash
-    git clone https://github.com/CumulusDS/sts-sites.git
-    ```
-4. Create the first feature branch in your local repo.
-5. Replace `PackageTemplate` and `Package Template` throughout the repo. Edit this file, `package.json` and `appveyor.yml` with the new service name.
-6. Push the feature branch. GitHub Actions should automatically build it.
-7. Change `"private": true"` in package.json; the "private" flag prevents publishing the package.
-7. Open the first pull request.
+Use npx to run via command-line. The output lists repos with open security alerts. Repos without alerts are not listed.
 
-# Domain Distillation
+```shell
+npx -q @cumulusds/vulnerable-repos --organization cumulusds
+```
 
-Please define your core domain here.
+```
+parrot-backend
+        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of
+        GHSA-g95f-p29q-9xw4      LOW Regular Expression Denial of Service in braces
+        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser
+        GHSA-vh95-rmgr-6w4m      LOW Prototype Pollution in minimist
+
+cluster-app
+        GHSA-4g88-fppr-53pp     HIGH Prototype Pollution in set-value
+        GHSA-ff7x-qrg7-qggm     HIGH Prototype Pollution in dot-prop
+        GHSA-v8v8-6859-qxm4     HIGH Arbitrary shell command execution in logkitty
+        GHSA-6chw-6frg-f759 MODERATE Regular Expression Denial of Service in Acorn
+        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of
+        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser
+        GHSA-w7rc-rwvf-8q5r      LOW The `size` option isn't honored after following a redirect in node-fetch
+```
+
+The GraphQL API does expose whether vulnerability alerts are actually enabled. You can use [github/enable-security-alerts-sample] to enable vulnerability alerts for every repo.
+
+[GitHub personal access token]: https://github.com/settings/tokens
+[github/enable-security-alerts-sample]: https://github.com/github/enable-security-alerts-sample.git
 
 # Development
 
