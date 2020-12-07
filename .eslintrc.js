@@ -3,7 +3,8 @@ module.exports = {
   rules: {
     "linebreak-style": "off",
     "no-console": "off",
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off"
   },
   plugins: ["jest", "flowtype"],
   env: {
