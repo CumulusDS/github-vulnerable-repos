@@ -1,0 +1,61 @@
+name: Vulerability Report
+on:
+  push:
+  schedule:
+    - cron: '0 9 * * *'
+jobs:
+  report:
+    name: Run Report
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          fetch-depth: 0
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Install NPM credentials
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" >> ~/.npmrc
+      - name: Get yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Restore yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install NPM Packages
+        run: yarn install --frozen-lockfile
+      - name: get vulnerable repos
+        run: |
+          script -q "vulnerabilities.txt" yarn repos
+          echo "VULNERABILITIES=$(cat vulnerabilities.txt)" >> $GITHUB_ENV
+          rm vulnerabilities.txt
+      - name: slackify vulnerabilities
+        id: slackify
+        uses: LoveToKnow/slackify-markdown-action@v1.0.0
+        if: always()
+        with:
+          text: ${{ env.VULNERABILITIES }}
+      - name: Notify deployment
+        id: notify
+        uses: rtCamp/action-slack-notify@v2
+        if: always()
+        env:
+          SLACK_CHANNEL: Jeff
+          SLACK_USERNAME: "Vulnerability Reporter"
+          SLACK_ICON: "https://www.checkpoint.com/wp-content/uploads/what-is-security-management-architecture-icon.jpg"
+          SLACK_ICON_EMOJI: ":bell:"
+          SLACK_COLOR: "#2D50FF"
+          MSG_MINIMAL: true
+          SLACK_TITLE: "Open Repository Vulnerabilities"
+          SLACK_MESSAGE: |
+            ${{ steps.slackify.outputs.text }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
