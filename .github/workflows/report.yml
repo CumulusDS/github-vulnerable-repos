@@ -43,7 +43,7 @@ jobs:
           echo "::endgroup::"
           echo "::group::edit"
           sed -i -e '1,3d' -e '$d' -e '$d' -e '$d' vulnerabilities.txt
-          sed -i -e 's/\(^\([a-z0-9-]*\)$\)/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\)/g' vulnerabilities.txt
+          sed -i -e 's/\(^\([a-z0-9-]*\)$\)/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\)/gm' vulnerabilities.txt
           sed -i -e 's/\t\(GHSA-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*\)/[\1]\(https\:\/\/github.com\/advisories\/\1\)/g' vulnerabilities.txt
           echo "::endgroup::"
           echo "::group::set env"
