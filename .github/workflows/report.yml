@@ -39,12 +39,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           echo "::group::Get vulnerable repos"
-          script -q -c "yarn repos" vulnerabilities.txt
+          yarn repos | sed -e '1,2d' -e '$d' -e '$d' > vulnerabilities.txt
           echo "::endgroup::"
-          echo "::group::edit"
-          sed -i -e '1,3d' -e '$d' -e '$d' -e '$d' vulnerabilities.txt
-          sed -i -e 's/\(^\([a-z0-9-]*\)$\)/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\)/gm' vulnerabilities.txt
-          sed -i -e 's/\t\(GHSA-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*\)/[\1]\(https\:\/\/github.com\/advisories\/\1\)/g' vulnerabilities.txt
+          echo "::group::debug output"
+          cat vulnerabilities.txt
+          echo "::endgroup::"
+          echo "::group::link to repo"
+          sed -i -e 's/^\([a-z0-9-]\{4,\}\)$/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\)/gm' vulnerabilities.txt
+          cat vulnerabilities.txt
+          echo "::endgroup::"
+          echo "::group::link to advisory"
+          sed -i -e 's/\t\(GHSA-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*\)/- [\1]\(https\:\/\/github.com\/advisories\/\1\)/g' vulnerabilities.txt
+          cat vulnerabilities.txt
           echo "::endgroup::"
           echo "::group::set env"
           echo "VULNERABILITIES<<EOF" >> $GITHUB_ENV
@@ -65,6 +71,7 @@ jobs:
         env:
           SLACK_CHANNEL: devops-dev
           SLACK_USERNAME: "Vulnerability Reporter"
+          SLACK_MSG_AUTHOR: ""
           SLACK_ICON: "https://www.checkpoint.com/wp-content/uploads/what-is-security-management-architecture-icon.jpg"
           SLACK_ICON_EMOJI: ":bell:"
           SLACK_COLOR: "#2D50FF"
