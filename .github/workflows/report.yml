@@ -32,10 +32,25 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install NPM Packages
         run: yarn install --frozen-lockfile
+      - name: build
+        run: yarn build
       - name: get vulnerable repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
-          script -q "vulnerabilities.txt" yarn repos
-          echo "VULNERABILITIES=$(cat vulnerabilities.txt)" >> $GITHUB_ENV
+          echo "::group::Get vulnerable repos"
+          script -q -c "yarn repos" vulnerabilities.txt
+          echo "::endgroup::"
+          echo "::group::edit"
+          sed -i -e '1,3d' -e '$d' -e '$d' -e '$d' vulnerabilities.txt
+          sed -i -e 's/\(^\([a-z0-9-]*\)$\)/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\)/g' vulnerabilities.txt
+          sed -i -e 's/\t\(GHSA-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*-\([a-zA-Z0-9]\)\w*\)/[\1]\(https\:\/\/github.com\/advisories\/\1\)/g' vulnerabilities.txt
+          echo "::endgroup::"
+          echo "::group::set env"
+          echo "VULNERABILITIES<<EOF" >> $GITHUB_ENV
+          cat vulnerabilities.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "::endgroup::"
           rm vulnerabilities.txt
       - name: slackify vulnerabilities
         id: slackify
@@ -43,12 +58,12 @@ jobs:
         if: always()
         with:
           text: ${{ env.VULNERABILITIES }}
-      - name: Notify deployment
+      - name: Notify Slack
         id: notify
         uses: rtCamp/action-slack-notify@v2
         if: always()
         env:
-          SLACK_CHANNEL: Jeff
+          SLACK_CHANNEL: devops-dev
           SLACK_USERNAME: "Vulnerability Reporter"
           SLACK_ICON: "https://www.checkpoint.com/wp-content/uploads/what-is-security-management-architecture-icon.jpg"
           SLACK_ICON_EMOJI: ":bell:"
@@ -57,5 +72,6 @@ jobs:
           SLACK_TITLE: "Open Repository Vulnerabilities"
           SLACK_MESSAGE: |
             ${{ steps.slackify.outputs.text }}
+          SLACK_FOOTER: ""
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
