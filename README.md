@@ -1,5 +1,9 @@
 # Vulnerable Repos
 
+[![ci-cd][ci-cd-badge]][ci-cd-url]
+[![Vulerability Report][vulnerability-report-badge]][vulnerability-report-url]
+[![Create Release][release-badge]][release-url]
+
 List the repositories owned by an organization that have a vulnerability alert.
 
 To access private repositories, set the GITHUB_TOKEN environment variable with a [GitHub personal access token].
@@ -42,3 +46,12 @@ The GraphQL API does expose whether vulnerability alerts are actually enabled. Y
 ## License
 
 This package is not licensed.
+
+[ci-cd-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/ci-cd.yml
+[ci-cd-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/ci-cd.yml/badge.svg
+
+[vulnerability-report-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/report.yml
+[vulnerability-report-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/report.yml/badge.svg
+
+[release-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/release.yml
+[release-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/release.yml/badge.svg
