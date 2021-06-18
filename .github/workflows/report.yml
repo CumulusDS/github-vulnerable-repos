@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: setup node
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2
         with:
           node-version: '12'
       - name: Install NPM credentials
@@ -91,4 +91,3 @@ jobs:
             ${{ steps.slackify.outputs.text }}
           SLACK_FOOTER: ""
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
