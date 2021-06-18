@@ -1,8 +1,5 @@
 name: Vulerability Report
 on:
-  push:
-    branches:
-      - master
   schedule:
     - cron: '0 9 * * *'
 jobs:
@@ -51,7 +48,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::move description"
-          sed -i -e 's/\(-\([a-zA-Z0-9]\)\w*\)\(-\([a-zA-Z0-9]\)\w*\)\(\s*\)\([A-Z]\{3,8\}\)\(\s\)\(.*\)$/\1\3\5 Level\: **\6**\n```\n\8\n```\n/gm' vulnerabilities.txt
+          sed -i -e 's/\(-\([a-zA-Z0-9]\)\w*\)\(-\([a-zA-Z0-9]\)\w*\)\(\s*\)\([A-Z]\{3,8\}\)\(\s\)\(.*\)$/\1\3\5 Level\: **\6**\n`\n\8\n`\n/gm' vulnerabilities.txt
           cat vulnerabilities.txt
           echo "::endgroup::"
 

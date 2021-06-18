@@ -53,14 +53,3 @@ jobs:
           draft: false
           commit: ${{ github.sha }}
           bodyFile: changelog/changelog-${{ env.mostRecentTag }}.md
-      - name: commit & push
-        uses: github-actions-x/commit@v2.4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          push-branch: master
-          commit-message: 'added changelog/changelog-${{ env.mostRecentTag }}.md'
-          force-add: 'true'
-          files: changelog/changelog-${{ env.mostRecentTag }}.md
-          rebase: 'false'
-          name: ${{ GITHUB.ACTOR }}
-          email: ${{ GITHUB.ACTOR }}@users.noreply.github.com
