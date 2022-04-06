@@ -31,7 +31,8 @@ cluster-app
         GHSA-w7rc-rwvf-8q5r      LOW The `size` option isn't honored after following a redirect in node-fetch
 ```
 
-The GraphQL API does expose whether vulnerability alerts are actually enabled. You can enable vulnerability alerts across your organization on the [Configure security and analysis features] page.
+The GraphQL API does expose whether vulnerability alerts are actually enabled. You can enable vulnerability alerts
+across your organization on the [Configure security and analysis features] page.
 
 [GitHub personal access token]: https://github.com/settings/tokens
 [Configure security and analysis features]: https://github.com/organizations/CumulusDS/settings/security_analysis
