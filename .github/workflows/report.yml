@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Setup
-        uses: CumulusDS/workflow-setup-action@v1
+        uses: CumulusDS/workflow-setup-action@v2
         with:
           nodeVersion: 12
           npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
