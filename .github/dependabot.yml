@@ -1,5 +1,9 @@
 version: 2
-
+registries:
+  npm-npmjs:
+    type: npm-registry
+    url: https://registry.npmjs.org
+    token: ${{ secrets.NODE_AUTH_TOKEN }}
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -13,3 +17,21 @@ updates:
       - "jeffsays"
     reviewers:
       - "jeffsays"
+  - package-ecosystem: "npm"
+    directory: "/"
+    registries:
+      - npm-npmjs
+    schedule:
+      interval: "daily"
+      time: "07:30"
+      timezone: "America/New_York"
+    labels:
+      - "dependencies"
+      - "dependabot"
+    assignees:
+      - "jeffsays"
+    reviewers:
+      - "jeffsays"
+    allow:
+      - dependency-name: "@cumulusds/*"
+        dependency-type: "all"
