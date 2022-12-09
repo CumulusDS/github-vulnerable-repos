@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
+    "node": "^14.15.0 || ^16.17.0 || >=18.0.0"
   },
   "main": "lib/index.js",
   "src": [
