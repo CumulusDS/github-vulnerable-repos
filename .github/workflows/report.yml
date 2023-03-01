@@ -11,7 +11,7 @@ jobs:
       - name: Setup
         uses: CumulusDS/workflow-setup-action@v2
         with:
-          nodeVersion: 12
+          nodeVersion: 16
           npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
           fetch-depth: 0
       - name: Build
@@ -58,7 +58,7 @@ jobs:
       - name: Notify
         id: notify
         uses: rtCamp/action-slack-notify@v2
-        if: always()
+        if: always() && succes()
         env:
           SLACK_CHANNEL: engineering-services
           SLACK_USERNAME: "Vulnerability Reporter"
