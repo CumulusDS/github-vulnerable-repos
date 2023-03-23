@@ -1074,9 +1074,9 @@
     minimist "^1.2.0"
 
 "@cumulusds/badge-up@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@cumulusds/badge-up/-/badge-up-2.3.0.tgz#ea00160100808eca9be99bd2f742ce9f2e19e6e7"
-  integrity sha512-CEXA/H7pu4cNuLEkbQ8IJMOzRKmVFJdVK9+bTkQtw//3NLzBZ/WsKBxvRhpgzJ4rEZyhPdaimX+RIyJFYTCnXg==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@cumulusds/badge-up/-/badge-up-2.3.1.tgz#63265aaace1d5f6b078eb919028a55ec1cdacd63"
+  integrity sha512-SY316ZjZPimX3xxpSGafRakSmdg6BMKpEy55GvFfwUgmv9U5eX4bfX9UXnYJkglWINcpzUJWUeCgRFC17GEMBA==
   dependencies:
     css-color-names "~1.0.1"
     dot "^1.1.3"
@@ -1874,7 +1874,7 @@ ansi-regex@^4.1.0:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-4.1.1.tgz#164daac87ab2d6f6db3a29875e2d1766582dabed"
   integrity sha512-ILlv4k/3f6vfQ4OoP2AGvirOktlQ98ZEL1k9FaQjxa3L1abBgbuTDAdPOpvbGncC0BTVQrl+OM8xZGK6tWXt7g==
 
-ansi-regex@^5.0.0, ansi-regex@^5.0.1:
+ansi-regex@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
   integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
