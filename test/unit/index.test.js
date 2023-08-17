@@ -26,6 +26,21 @@ jest.mock("@octokit/graphql", () => ({
                     }
                   ]
                 }
+              },
+              {
+                name: "repo-3",
+                vulnerabilityAlerts: {
+                  nodes: [
+                    {
+                      autoDismissedAt: "2023-08-17T12:34:56Z",
+                      fixedAt: null,
+                      securityVulnerability: {
+                        advisory: { ghsaId: "id-2", summary: "summary-2" },
+                        severity: "CRITICAL"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -43,6 +58,7 @@ jest.mock("@octokit/graphql", () => ({
                 vulnerabilityAlerts: {
                   nodes: [
                     {
+                      autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {
@@ -51,6 +67,7 @@ jest.mock("@octokit/graphql", () => ({
                       }
                     },
                     {
+                      autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {
@@ -59,6 +76,7 @@ jest.mock("@octokit/graphql", () => ({
                       }
                     },
                     {
+                      autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {

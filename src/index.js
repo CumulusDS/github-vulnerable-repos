@@ -28,6 +28,7 @@ query OrganizationRepositories($after: String) {
         vulnerabilityAlerts(first: 100) {
           nodes {
             dismissedAt,
+            autoDismissedAt,
             fixedAt,
             securityVulnerability {
               advisory { ghsaId, summary },
@@ -57,6 +58,7 @@ type Severity = $Keys<typeof label>;
 
 type Node = {
   dismissedAt: ?string,
+  autoDismissedAt: ?string,
   fixedAt: ?string,
   securityVulnerability: { advisory: { ghsaId: string, summary: string }, severity: Severity }
 };
@@ -99,6 +101,7 @@ export default async function main() {
     } = repository;
     const vulnerabilities = nodes
       .filter(({ dismissedAt }) => dismissedAt == null)
+      .filter(({ autoDismissedAt }) => autoDismissedAt == null)
       .filter(({ fixedAt }) => fixedAt == null);
     if (vulnerabilities.length > 0) {
       const advisories: Advisory[] = vulnerabilities
