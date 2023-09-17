@@ -1,10 +1,11 @@
 // @flow
 
-import type { Node, Repository } from "./repository";
+import type { RepositoryVulnerabilityAlert, Repository } from "./repository";
 
 export type VulnerableRepository = {|
   name: string,
-  vulnerabilities: $ReadOnlyArray<Node>
+  hasVulnerabilityAlertsEnabled: boolean,
+  vulnerabilities: $ReadOnlyArray<RepositoryVulnerabilityAlert>
 |};
 
 export default async function* generateVulnerableRepositories(
@@ -13,15 +14,17 @@ export default async function* generateVulnerableRepositories(
   for await (const repository of repositories) {
     const {
       name,
+      hasVulnerabilityAlertsEnabled,
       vulnerabilityAlerts: { nodes }
     } = repository;
     const vulnerabilities = nodes
       .filter(({ dismissedAt }) => dismissedAt == null)
       .filter(({ autoDismissedAt }) => autoDismissedAt == null)
       .filter(({ fixedAt }) => fixedAt == null);
-    if (vulnerabilities.length > 0) {
+    if (!hasVulnerabilityAlertsEnabled || vulnerabilities.length > 0) {
       yield {
         name,
+        hasVulnerabilityAlertsEnabled,
         vulnerabilities
       };
     }
