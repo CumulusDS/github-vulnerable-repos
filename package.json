@@ -55,7 +55,8 @@
   },
   "dependencies": {
     "@octokit/graphql": "^4.5.3",
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "minimist": "^1.2.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
