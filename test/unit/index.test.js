@@ -11,12 +11,14 @@ jest.mock("@octokit/graphql", () => ({
           repositories: {
             pageInfo: { endCursor: "endCursor-1", hasNextPage: true },
             nodes: [
-              { name: "repo-1", vulnerabilityAlerts: { nodes: [] } },
+              { name: "repo-1", hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } },
               {
                 name: "repo-2",
+                hasVulnerabilityAlertsEnabled: true,
                 vulnerabilityAlerts: {
                   nodes: [
                     {
+                      createdAt: "2020-10-21T01:35:51Z",
                       dismissedAt: "2020-10-22T01:35:51Z",
                       fixedAt: null,
                       securityVulnerability: {
@@ -29,9 +31,11 @@ jest.mock("@octokit/graphql", () => ({
               },
               {
                 name: "repo-3",
+                hasVulnerabilityAlertsEnabled: true,
                 vulnerabilityAlerts: {
                   nodes: [
                     {
+                      createdAt: "2020-10-21T01:35:51Z",
                       autoDismissedAt: "2023-08-17T12:34:56Z",
                       fixedAt: null,
                       securityVulnerability: {
@@ -59,6 +63,7 @@ jest.mock("@octokit/graphql", () => ({
                 vulnerabilityAlerts: {
                   nodes: [
                     {
+                      createdAt: "2023-09-17T19:35:31Z",
                       autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
@@ -68,6 +73,7 @@ jest.mock("@octokit/graphql", () => ({
                       }
                     },
                     {
+                      createdAt: "2023-09-17T19:35:31Z",
                       autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
@@ -77,6 +83,7 @@ jest.mock("@octokit/graphql", () => ({
                       }
                     },
                     {
+                      createdAt: "2023-09-17T19:35:31Z",
                       autoDismissedAt: null,
                       dismissedAt: null,
                       fixedAt: null,
@@ -91,13 +98,6 @@ jest.mock("@octokit/graphql", () => ({
               {
                 name: "has-vulnerability-alerts-disabled",
                 hasVulnerabilityAlertsEnabled: false,
-                vulnerabilityAlerts: {
-                  nodes: []
-                }
-              },
-              {
-                name: "lacks-vulnerability-alerts",
-                hasVulnerabilityAlertsEnabled: true,
                 vulnerabilityAlerts: {
                   nodes: []
                 }

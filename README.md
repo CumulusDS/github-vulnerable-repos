@@ -16,25 +16,25 @@ npx -q @cumulusds/vulnerable-repos --organization cumulusds
 
 ```
 parrot-backend
-        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of
-        GHSA-g95f-p29q-9xw4      LOW Regular Expression Denial of Service in braces
-        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser
-        GHSA-vh95-rmgr-6w4m      LOW Prototype Pollution in minimist
+        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of (103d)
+        GHSA-g95f-p29q-9xw4      LOW Regular Expression Denial of Service in braces (96d)
+        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser (40m)
+        GHSA-vh95-rmgr-6w4m      LOW Prototype Pollution in minimist (40m)
 
 cluster-app
-        GHSA-4g88-fppr-53pp     HIGH Prototype Pollution in set-value
-        GHSA-ff7x-qrg7-qggm     HIGH Prototype Pollution in dot-prop
-        GHSA-v8v8-6859-qxm4     HIGH Arbitrary shell command execution in logkitty
-        GHSA-6chw-6frg-f759 MODERATE Regular Expression Denial of Service in Acorn
-        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of
-        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser
-        GHSA-w7rc-rwvf-8q5r      LOW The `size` option isn't honored after following a redirect in node-fetch
+        GHSA-4g88-fppr-53pp     HIGH Prototype Pollution in set-value (70d)
+        GHSA-ff7x-qrg7-qggm     HIGH Prototype Pollution in dot-prop (184d)
+        GHSA-v8v8-6859-qxm4     HIGH Arbitrary shell command execution in logkitty (40m)
+        GHSA-6chw-6frg-f759 MODERATE Regular Expression Denial of Service in Acorn (40m)
+        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of (40m)
+        GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser (40m)
+        GHSA-w7rc-rwvf-8q5r      LOW The `size` option isn't honored after following a redirect in node-fetch (40m)
 
 app-api-gateway
         Vulnerability alerts are disabled
 ```
 
-The application reports on any repositories that have an open vulnerability alert or have alerting disabled. Archived repos are not reported.
+The application reports on any repositories that have an open vulnerability alert or have alerting disabled. The report shows the age of each alert. Archived repos are not reported.
 
 You can enable vulnerability alerts
 across your organization on the [Configure security and analysis features] page.

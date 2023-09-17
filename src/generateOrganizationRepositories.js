@@ -29,11 +29,15 @@ query OrganizationRepositories($after: String) {
         hasVulnerabilityAlertsEnabled,
         vulnerabilityAlerts(first: 100) {
           nodes {
+            createdAt,
             dismissedAt,
             autoDismissedAt,
             fixedAt,
             securityVulnerability {
-              advisory { ghsaId, summary },
+              advisory { 
+                ghsaId,
+                summary
+              },
               severity
             }
           }
