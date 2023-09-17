@@ -12,7 +12,7 @@ export const label = {
 
 export type Severity = $Keys<typeof label>;
 
-type Node = {
+export type Node = {
   dismissedAt: ?string,
   autoDismissedAt: ?string,
   fixedAt: ?string,
