@@ -24,6 +24,7 @@ query OrganizationRepositories($after: String) {
         hasNextPage
       }
       nodes {
+        isArchived,
         name,
         hasVulnerabilityAlertsEnabled,
         vulnerabilityAlerts(first: 100) {
@@ -48,11 +49,11 @@ query OrganizationRepositories($after: String) {
 
 export default async function* generateOrganizationRepositories(): AsyncIterator<Repository> {
   const firstPage = await getOrganizationRepositories();
-  yield* firstPage.organization.repositories.nodes;
+  yield* firstPage.organization.repositories.nodes.filter(node => !node.isArchived);
   let { pageInfo } = firstPage.organization.repositories;
   while (pageInfo.hasNextPage) {
     const page = await getOrganizationRepositories(pageInfo.endCursor);
-    yield* page.organization.repositories.nodes;
+    yield* page.organization.repositories.nodes.filter(node => !node.isArchived);
     pageInfo = page.organization.repositories.pageInfo;
   }
 }
