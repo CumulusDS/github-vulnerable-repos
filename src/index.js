@@ -2,9 +2,10 @@
 
 import chalk from "chalk";
 import { graphql } from "@octokit/graphql";
-import type { Repository, Severity } from "./repository";
+import type { Repository } from "./repository";
 import { label } from "./repository";
 import generateVulnerableRepositories from "./generateVulnerableRepositories";
+import getAdvisories from "./getAdvisories";
 
 function github() {
   return process.env.GITHUB_TOKEN == null
@@ -48,8 +49,6 @@ query OrganizationRepositories($after: String) {
   );
 }
 
-const severities = Object.keys(label);
-
 async function* generateOrganizationRepositories(): AsyncIterator<Repository> {
   const firstPage = await getOrganizationRepositories();
   yield* firstPage.organization.repositories.nodes;
@@ -61,28 +60,10 @@ async function* generateOrganizationRepositories(): AsyncIterator<Repository> {
   }
 }
 
-type Advisory = { ghsaId: string, severity: Severity, summary: string };
-
-function order(left: Advisory, right: Advisory) {
-  if (
-    severities.indexOf(left.severity) < severities.indexOf(right.severity) ||
-    (left.severity === right.severity && left.ghsaId < right.ghsaId)
-  ) {
-    return -1;
-  }
-  return 1;
-}
-
 export default async function main() {
   for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories())) {
-    const { name, vulnerabilities } = repository;
-    const advisories: Advisory[] = vulnerabilities
-      .map(({ securityVulnerability: { advisory: { ghsaId, summary }, severity } }) => ({
-        ghsaId,
-        severity,
-        summary
-      }))
-      .sort(order);
+    const { name } = repository;
+    const advisories = getAdvisories(repository);
     console.log(chalk`{bold ${name}}`);
     advisories.forEach(({ ghsaId, severity, summary }) => console.log(`\t${ghsaId} ${label[severity]} ${summary}`));
     console.log();
