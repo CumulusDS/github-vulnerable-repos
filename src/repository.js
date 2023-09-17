@@ -20,6 +20,7 @@ export type RepositoryVulnerabilityAlert = {|
 |};
 
 export type Repository = {|
+  isArchived: boolean,
   name: string,
   hasVulnerabilityAlertsEnabled: boolean,
   vulnerabilityAlerts: {|

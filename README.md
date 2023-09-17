@@ -29,9 +29,14 @@ cluster-app
         GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of
         GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser
         GHSA-w7rc-rwvf-8q5r      LOW The `size` option isn't honored after following a redirect in node-fetch
+
+app-api-gateway
+        Vulnerability alerts are disabled
 ```
 
-The GraphQL API does expose whether vulnerability alerts are actually enabled. You can enable vulnerability alerts
+The application reports on any repositories that have an open vulnerability alert or have alerting disabled. Archived repos are not reported.
+
+You can enable vulnerability alerts
 across your organization on the [Configure security and analysis features] page.
 
 [GitHub personal access token]: https://github.com/settings/tokens
