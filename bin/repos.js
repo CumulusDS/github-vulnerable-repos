@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-const repos = require("../lib").default;
+const main = require("../lib").default;
 
-repos({});
+main();

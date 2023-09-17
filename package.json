@@ -27,7 +27,7 @@
     "publish:minor": "yarn version minor && yarn publish:sync",
     "publish:patch": "yarn version patch && yarn publish:sync",
     "publish:sync": "yarn run git:commit && yarn run git:tag && yarn git:push",
-    "repos": "bin/repos.js",
+    "repos": "yarn build:babel && bin/repos.js",
     "sites": "node bin/sites.js",
     "test": "yarn test:flow:status && yarn test:lint && yarn test:prettier && yarn test:flow:coverage-report && yarn test:jest",
     "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 76 --output-dir var/coverage/flow",
