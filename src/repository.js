@@ -12,7 +12,9 @@ export const label = {
 
 export type Severity = $Keys<typeof label>;
 
+// See https://docs.github.com/en/graphql/reference/objects#repositoryvulnerabilityalert
 export type RepositoryVulnerabilityAlert = {|
+  createdAt: string,
   dismissedAt: ?string,
   autoDismissedAt: ?string,
   fixedAt: ?string,
