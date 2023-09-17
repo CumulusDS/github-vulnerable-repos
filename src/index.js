@@ -2,6 +2,8 @@
 
 import chalk from "chalk";
 import { graphql } from "@octokit/graphql";
+import type { Repository, Severity } from "./repository";
+import { label } from "./repository";
 
 function github() {
   return process.env.GITHUB_TOKEN == null
@@ -45,30 +47,7 @@ query OrganizationRepositories($after: String) {
   );
 }
 
-const label = {
-  CRITICAL: chalk`{red  CRITICAL}`,
-  HIGH: chalk`{magenta     HIGH}`,
-  MODERATE: chalk`{green MODERATE}`,
-  LOW: chalk`{cyan      LOW}`
-};
-
 const severities = Object.keys(label);
-
-type Severity = $Keys<typeof label>;
-
-type Node = {
-  dismissedAt: ?string,
-  autoDismissedAt: ?string,
-  fixedAt: ?string,
-  securityVulnerability: { advisory: { ghsaId: string, summary: string }, severity: Severity }
-};
-
-type Repository = {
-  name: string,
-  vulnerabilityAlerts: {
-    nodes: Node[]
-  }
-};
 
 async function* generateOrganizationRepositories(): AsyncIterator<Repository> {
   const firstPage = await getOrganizationRepositories();
