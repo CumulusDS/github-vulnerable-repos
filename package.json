@@ -46,7 +46,7 @@
     "coverageDirectory": "var/coverage/test",
     "coverageThreshold": {
       "global": {
-        "branches": 88,
+        "branches": 93,
         "functions": 100,
         "lines": 100,
         "statements": 100

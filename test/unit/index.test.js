@@ -54,7 +54,8 @@ jest.mock("@octokit/graphql", () => ({
             pageInfo: { endCursor: "endCursor-2", hasNextPage: false },
             nodes: [
               {
-                name: "repo-3",
+                name: "has-vulnerability-alerts",
+                hasVulnerabilityAlertsEnabled: true,
                 vulnerabilityAlerts: {
                   nodes: [
                     {
@@ -85,6 +86,20 @@ jest.mock("@octokit/graphql", () => ({
                       }
                     }
                   ]
+                }
+              },
+              {
+                name: "has-vulnerability-alerts-disabled",
+                hasVulnerabilityAlertsEnabled: false,
+                vulnerabilityAlerts: {
+                  nodes: []
+                }
+              },
+              {
+                name: "lacks-vulnerability-alerts",
+                hasVulnerabilityAlertsEnabled: true,
+                vulnerabilityAlerts: {
+                  nodes: []
                 }
               }
             ]

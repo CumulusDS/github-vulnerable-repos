@@ -12,7 +12,7 @@ export const label = {
 
 export type Severity = $Keys<typeof label>;
 
-export type Node = {|
+export type RepositoryVulnerabilityAlert = {|
   dismissedAt: ?string,
   autoDismissedAt: ?string,
   fixedAt: ?string,
@@ -21,7 +21,8 @@ export type Node = {|
 
 export type Repository = {|
   name: string,
+  hasVulnerabilityAlertsEnabled: boolean,
   vulnerabilityAlerts: {|
-    nodes: Node[]
+    nodes: RepositoryVulnerabilityAlert[]
   |}
 |};
