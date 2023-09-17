@@ -17,27 +17,21 @@ jobs:
         node: [14, 16, 18]
     timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Node ${{ matrix.node }}
-        uses: actions/setup-node@v3
+      - name: Setup
+        uses: CumulusDS/workflow-setup-action@v2
+        if: github.event_name != 'pull_request_target'
         with:
-          node-version: ${{ matrix.node }}
-      - name: Install NPM credentials
-        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v3
+          nodeVersion: 16
+          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
+          packageManager: yarn3
+      - name: Setup (dependabot)
+        uses: CumulusDS/workflow-setup-action@v2
+        if: github.event_name == 'pull_request_target'
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install NPM Packages
-        run: yarn install --frozen-lockfile
+          nodeVersion: 16
+          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          packageManager: yarn3
       - name: Check licenses
         run: yarn build:license-checker
       - name: Test
@@ -63,29 +57,23 @@ jobs:
     if: github.event_name == 'release'
     timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Node 14
-        uses: actions/setup-node@v3
+      - name: Setup
+        uses: CumulusDS/workflow-setup-action@v2
+        if: github.event_name != 'pull_request_target'
         with:
-          node-version: 14
-      - name: Install NPM credentials
-        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v3
+          nodeVersion: 16
+          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
+          packageManager: yarn3
+      - name: Setup (dependabot)
+        uses: CumulusDS/workflow-setup-action@v2
+        if: github.event_name == 'pull_request_target'
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install NPM Packages
-        run: yarn install --frozen-lockfile
+          nodeVersion: 16
+          npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          packageManager: yarn3
       - name: Build
         run: yarn build
       - name: Publish
-        run: npm publish
+        run: yarn npm publish
         if: startsWith(github.event.ref, 'refs/tags')
