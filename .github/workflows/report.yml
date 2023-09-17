@@ -14,6 +14,7 @@ jobs:
           nodeVersion: 16
           npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
           fetch-depth: 0
+          packageManager: yarn3
       - name: Build
         run: yarn build
       - name: Get vulnerable repos

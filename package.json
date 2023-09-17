@@ -15,26 +15,26 @@
     "package.json"
   ],
   "scripts": {
-    "build": "run-p build:babel build:flow-copy-source build:license-checker",
+    "build": "yarn build:babel && yarn build:flow-copy-source && yarn build:license-checker",
     "build:babel": "babel src --out-dir lib --ignore test.js",
     "build:flow-copy-source": "flow-copy-source --ignore test.js src lib",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
     "clean": "shx rm -rf lib",
+    "git:commit": "git add package.json && git commit -m v${npm_package_version}",
     "git:push": "git push --follow-tags",
-    "publish:patch": "run-s version:patch git:push",
-    "publish:minor": "run-s version:minor git:push",
-    "publish:major": "run-s version:major git:push",
+    "git:tag": "git tag -a v${npm_package_version} -m v${npm_package_version}",
+    "publish:major": "yarn version major && yarn publish:sync",
+    "publish:minor": "yarn version minor && yarn publish:sync",
+    "publish:patch": "yarn version patch && yarn publish:sync",
+    "publish:sync": "yarn run git:commit && yarn run git:tag && yarn git:push",
     "repos": "bin/repos.js",
     "sites": "node bin/sites.js",
-    "test": "run-p --aggregate-output test:**",
+    "test": "yarn test:flow:status && yarn test:lint && yarn test:prettier && yarn test:flow:coverage-report && yarn test:jest",
     "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 76 --output-dir var/coverage/flow",
     "test:flow:status": "flow status",
     "test:jest": "jest --color",
     "test:lint": "eslint *.js src test",
-    "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml}\" \"*.{js,yml}\"",
-    "version:patch": "yarn version --new-version patch",
-    "version:minor": "yarn version --new-version minor",
-    "version:major": "yarn version --new-version major"
+    "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml}\" \"*.{js,yml}\""
   },
   "jest": {
     "verbose": true,
@@ -79,11 +79,7 @@
     "git-describe": "^4.0.4",
     "jest": "^26.0.0",
     "license-checker": "^25.0.1",
-    "npm-run-all": "^4.1.3",
-    "prettier": "^1.14.0",
-    "shx": "^0.3.2"
+    "prettier": "^1.14.0"
   },
-  "resolutions": {
-    "set-value": "^4.0.1"
-  }
+  "packageManager": "yarn@3.6.3"
 }
