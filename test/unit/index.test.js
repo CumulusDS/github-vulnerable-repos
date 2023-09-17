@@ -99,5 +99,17 @@ describe("vulnerable-repos", () => {
     delete process.env.GITHUB_TOKEN;
   });
 
+  beforeEach(() => {
+    process.argv = ["node", "vulnerable-repos"];
+    // $FlowFixMe
+    console.log = jest.fn();
+  });
+
   it("resolves", () => expect(main()).resolves.toBeUndefined());
+
+  it("shows help message", async () => {
+    process.argv.push("--help");
+    await main();
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Options:"));
+  });
 });
