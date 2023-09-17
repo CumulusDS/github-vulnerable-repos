@@ -2,7 +2,7 @@
 
 import type { Node, Repository } from "./repository";
 
-type VulnerableRepository = {|
+export type VulnerableRepository = {|
   name: string,
   vulnerabilities: $ReadOnlyArray<Node>
 |};

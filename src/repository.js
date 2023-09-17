@@ -12,16 +12,16 @@ export const label = {
 
 export type Severity = $Keys<typeof label>;
 
-export type Node = {
+export type Node = {|
   dismissedAt: ?string,
   autoDismissedAt: ?string,
   fixedAt: ?string,
   securityVulnerability: { advisory: { ghsaId: string, summary: string }, severity: Severity }
-};
+|};
 
-export type Repository = {
+export type Repository = {|
   name: string,
-  vulnerabilityAlerts: {
+  vulnerabilityAlerts: {|
     nodes: Node[]
-  }
-};
+  |}
+|};
