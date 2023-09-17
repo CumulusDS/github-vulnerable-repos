@@ -7294,6 +7294,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimist@npm:^1.2.8":
+  version: 1.2.8
+  resolution: "minimist@npm:1.2.8"
+  checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0
+  languageName: node
+  linkType: hard
+
 "minipass-collect@npm:^1.0.2":
   version: 1.0.2
   resolution: "minipass-collect@npm:1.0.2"
@@ -10121,6 +10128,7 @@ __metadata:
     git-describe: ^4.0.4
     jest: ^26.0.0
     license-checker: ^25.0.1
+    minimist: ^1.2.8
     prettier: ^1.14.0
   languageName: unknown
   linkType: soft
