@@ -22,7 +22,7 @@ jest.mock("@octokit/graphql", () => ({
                       dismissedAt: "2020-10-22T01:35:51Z",
                       fixedAt: null,
                       securityVulnerability: {
-                        advisory: { ghsaId: "id-1", summary: "summary-1" },
+                        advisory: { ghsaId: "id-1", summary: "summary-1", identifiers: [] },
                         severity: "HIGH"
                       }
                     }
@@ -39,7 +39,11 @@ jest.mock("@octokit/graphql", () => ({
                       autoDismissedAt: "2023-08-17T12:34:56Z",
                       fixedAt: null,
                       securityVulnerability: {
-                        advisory: { ghsaId: "id-2", summary: "summary-2" },
+                        advisory: {
+                          ghsaId: "id-2",
+                          summary: "summary-2",
+                          identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                        },
                         severity: "CRITICAL"
                       }
                     }
@@ -68,7 +72,11 @@ jest.mock("@octokit/graphql", () => ({
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {
-                        advisory: { ghsaId: "id-2", summary: "summary-2" },
+                        advisory: {
+                          ghsaId: "id-2",
+                          summary: "summary-2",
+                          identifiers: []
+                        },
                         severity: "HIGH"
                       }
                     },
@@ -78,7 +86,11 @@ jest.mock("@octokit/graphql", () => ({
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {
-                        advisory: { ghsaId: "id-3", summary: "summary-3" },
+                        advisory: {
+                          ghsaId: "id-3",
+                          summary: "summary-3",
+                          identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                        },
                         severity: "LOW"
                       }
                     },
@@ -88,7 +100,11 @@ jest.mock("@octokit/graphql", () => ({
                       dismissedAt: null,
                       fixedAt: null,
                       securityVulnerability: {
-                        advisory: { ghsaId: "id-4", summary: "summary-4" },
+                        advisory: {
+                          ghsaId: "id-4",
+                          summary: "summary-4",
+                          identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                        },
                         severity: "HIGH"
                       }
                     }

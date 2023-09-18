@@ -13,9 +13,11 @@ export default function renderVulnerableRepositoryToConsole(repository: Vulnerab
   const advisories = getAdvisories(repository);
   console.log(chalk`{bold ${name}}`);
   if (hasVulnerabilityAlertsEnabled) {
-    advisories.forEach(({ createdAt, ghsaId, severity, summary }) =>
+    advisories.forEach(({ createdAt, cve, ghsaId, severity, summary }) =>
       console.log(
-        `\t${ghsaId} ${label[severity]} ${summary} (${prettyMilliseconds(now - createdAt, { compact: true })})`
+        `\t${cve?.padEnd(19) ?? ghsaId} ${label[severity]} ${summary} (${prettyMilliseconds(now - createdAt, {
+          compact: true
+        })})`
       )
     );
   } else {

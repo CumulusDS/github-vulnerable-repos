@@ -15,9 +15,12 @@ npx -q @cumulusds/vulnerable-repos --organization cumulusds
 ```
 
 ```
+Open-Source Vulnerability Report for CumulusDS
+Sun Sep 17 2023
+
 parrot-backend
-        GHSA-6c8f-qphg-qjgp      LOW Validation Bypass in kind-of (103d)
-        GHSA-g95f-p29q-9xw4      LOW Regular Expression Denial of Service in braces (96d)
+        CVE-2023-34104          HIGH fast-xml-parser vulnerable to Regex Injection via Doctype Entities (103d)
+        CVE-2023-26920          HIGH fast-xml-parser vulnerable to Prototype Pollution through tag or attribute name (96d)
         GHSA-p9pc-299p-vxgp      LOW Prototype Pollution in yargs-parser (40m)
         GHSA-vh95-rmgr-6w4m      LOW Prototype Pollution in minimist (40m)
 
@@ -32,12 +35,15 @@ cluster-app
 
 app-api-gateway
         Vulnerability alerts are disabled
+
+Summary for all 115 repositories
+        8 skipped
+        107 scanned: 3 vulnerable, 104 clean
 ```
 
 The application reports on any repositories that have an open vulnerability alert or have alerting disabled. The report shows the age of each alert. Archived repos are not reported.
 
-You can enable vulnerability alerts
-across your organization on the [Configure security and analysis features] page.
+You can enable vulnerability alerts across your organization on the [Configure security and analysis features] page.
 
 [GitHub personal access token]: https://github.com/settings/tokens
 [Configure security and analysis features]: https://github.com/organizations/CumulusDS/settings/security_analysis

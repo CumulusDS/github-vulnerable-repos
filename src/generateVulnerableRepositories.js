@@ -21,12 +21,10 @@ export default async function* generateVulnerableRepositories(
       .filter(({ dismissedAt }) => dismissedAt == null)
       .filter(({ autoDismissedAt }) => autoDismissedAt == null)
       .filter(({ fixedAt }) => fixedAt == null);
-    if (!hasVulnerabilityAlertsEnabled || vulnerabilities.length > 0) {
-      yield {
-        name,
-        hasVulnerabilityAlertsEnabled,
-        vulnerabilities
-      };
-    }
+    yield {
+      name,
+      hasVulnerabilityAlertsEnabled,
+      vulnerabilities
+    };
   }
 }
