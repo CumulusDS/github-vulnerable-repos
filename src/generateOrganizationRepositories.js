@@ -36,7 +36,8 @@ query OrganizationRepositories($after: String) {
             securityVulnerability {
               advisory { 
                 ghsaId,
-                summary
+                summary,
+                identifiers { type, value }
               },
               severity
             }
