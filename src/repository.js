@@ -3,7 +3,7 @@
 import chalk from "chalk";
 
 // eslint-disable-next-line import/prefer-default-export
-export const label = {
+export const label: {| CRITICAL: string, HIGH: string, LOW: string, MODERATE: string |} = {
   CRITICAL: chalk`{red  CRITICAL}`,
   HIGH: chalk`{magenta     HIGH}`,
   MODERATE: chalk`{green MODERATE}`,
