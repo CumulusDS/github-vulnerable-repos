@@ -131,7 +131,7 @@ describe("vulnerable-repos", () => {
   });
 
   beforeEach(() => {
-    process.argv = ["node", "vulnerable-repos"];
+    process.argv = ["node", "vulnerable-repos", "--organization", "MyOrg"];
     // $FlowFixMe
     console.log = jest.fn();
   });

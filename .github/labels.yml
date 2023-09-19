@@ -60,7 +60,7 @@ labels:
     description: This will not be worked on
     color: "ffffff"
 repos:
-  - name: CumulusDS/vulnerable-repos
+  - name: CumulusDS/github-vulnerable-repos
     labels:
       - actions
       - autoapprove

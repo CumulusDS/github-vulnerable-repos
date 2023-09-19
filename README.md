@@ -1,21 +1,21 @@
-# Vulnerable Repos
+# GitHub Vulnerable Repo Reporter
 
 [![ci-cd][ci-cd-badge]][ci-cd-url]
-[![Vulerability Report][vulnerability-report-badge]][vulnerability-report-url]
 [![Create Release][release-badge]][release-url]
 
 List the repositories owned by an organization that have a vulnerability alert.
 
-To access private repositories, set the GITHUB_TOKEN environment variable with a [GitHub personal access token].
+This application requires a [GitHub Personal access token](https://github.com/settings/tokens/new). You can [create an access token] from the Developer settings page in your GitHub account settings. Set token to the GITHUB_TOKEN environment variable. You must be a member of the organization, and you must use an access token with the repo scope or security_events scope.
+![Required GitHub Token Scopes](./doc/githubTokenScopes.png)
 
 Use npx to run via command-line. The output lists repos with open security alerts. Repos without alerts are not listed.
 
 ```shell
-npx -q @cumulusds/vulnerable-repos --organization cumulusds
+GITHUB_TOKEN=ghp... npx -q @cumulusds/github-vulnerable-repos --organization MyOrg
 ```
 
 ```
-Open-Source Vulnerability Report for CumulusDS
+Open-Source Vulnerability Report for MyOrg
 Sun Sep 17 2023
 
 parrot-backend
@@ -43,10 +43,10 @@ Summary for all 115 repositories
 
 The application reports on any repositories that have an open vulnerability alert or have alerting disabled. The report shows the age of each alert. Archived repos are not reported.
 
-You can enable vulnerability alerts across your organization on the [Configure security and analysis features] page.
+You can enable vulnerability alerts across your organization on the "Configure security and analysis features" page.
 
 [GitHub personal access token]: https://github.com/settings/tokens
-[Configure security and analysis features]: https://github.com/organizations/CumulusDS/settings/security_analysis
+[create an access token]: https://github.com/settings/tokens/new
 
 # Development
 
@@ -57,13 +57,10 @@ You can enable vulnerability alerts across your organization on the [Configure s
 
 ## License
 
-This package is not licensed.
+This package is [MIT licensed](LICENSE).
 
-[ci-cd-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/ci-cd.yml
-[ci-cd-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/ci-cd.yml/badge.svg
+[ci-cd-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml
+[ci-cd-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml/badge.svg
 
-[vulnerability-report-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/report.yml
-[vulnerability-report-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/report.yml/badge.svg
-
-[release-url]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/release.yml
-[release-badge]: https://github.com/CumulusDS/vulnerable-repos/actions/workflows/release.yml/badge.svg
+[release-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/release.yml
+[release-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/release.yml/badge.svg
