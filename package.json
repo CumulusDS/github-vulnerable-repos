@@ -1,6 +1,6 @@
 {
   "name": "vulnerable-repos",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Report repos with vulnerability alerts",
   "repository": "https://github.com/CumulusDS/github-vulnerable-repos",
   "author": "Cumulus Digital Systems",
