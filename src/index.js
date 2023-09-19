@@ -13,10 +13,11 @@ function printHelp() {
     `List vulnerable repos - ${version}
 
 Options:
+\t-o, --organization STRING      - Give the organization. (required)
 \t-h, --help                     - Print this message.
 
 example:
-\trepos
+\trepos --organization MyOrg
 `
   );
 }
@@ -24,24 +25,28 @@ example:
 export default async function main() {
   const args = parseArgs(process.argv.slice(2), {
     alias: {
+      organization: ["o"],
       help: ["h"]
     },
     boolean: ["help"]
   });
-  if (args.help) {
+
+  const { organization } = args;
+
+  if (args.help || typeof organization !== "string") {
     printHelp();
     return;
   }
 
   const now = new Date();
-  console.log(chalk`{bold Open-Source Vulnerability Report for CumulusDS}`);
+  console.log(chalk`{bold Open-Source Vulnerability Report for ${organization}}`);
   console.log(now.toDateString());
   console.log();
 
   let cleanRepositoryCount = 0;
   let vulnerableRepositoryCount = 0;
   let disabledRepositoryCount = 0;
-  for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories())) {
+  for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories(organization))) {
     const { hasVulnerabilityAlertsEnabled, vulnerabilities } = repository;
     if (vulnerabilities.length > 0) {
       renderVulnerableRepositoryToConsole(repository);
@@ -56,7 +61,7 @@ export default async function main() {
   console.log(
     chalk`{bold Summary for all ${cleanRepositoryCount +
       vulnerableRepositoryCount +
-      disabledRepositoryCount} cumulusds repositories}`
+      disabledRepositoryCount} repositories}`
   );
   console.log(`\t${disabledRepositoryCount} skipped`);
   console.log(

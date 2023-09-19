@@ -23,12 +23,12 @@ jobs:
         run: |
           echo "::group::Get vulnerable repos"
           echo "::debug::Do some trimming as well"
-          yarn repos | sed -e '1,2d' -e '$d' -e '$d' > vulnerabilities.txt
+          yarn repos --organization ${{ github.repository_owner }} | sed -e '1,2d' -e '$d' -e '$d' > vulnerabilities.txt
           cat vulnerabilities.txt
           echo "::endgroup::"
 
           echo "::group::link to repos"
-          sed -i -e 's/^\([a-z0-9-]\{4,\}\)$/[\1]\(https\:\/\/github.com\/CumulusDS\/\1\/security\/dependabot\)/gm' vulnerabilities.txt
+          sed -i -e 's/^\([a-z0-9-]\{4,\}\)$/[\1]\(https\:\/\/github.com\/${{ github.repository_owner }}\/\1\/security\/dependabot\)/gm' vulnerabilities.txt
           cat vulnerabilities.txt
           echo "::endgroup::"
 
@@ -59,7 +59,7 @@ jobs:
       - name: Notify
         id: notify
         uses: rtCamp/action-slack-notify@v2
-        if: always() && succes()
+        if: always() && success()
         env:
           SLACK_CHANNEL: engineering-services
           SLACK_USERNAME: "Vulnerability Reporter"

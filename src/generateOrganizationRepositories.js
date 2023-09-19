@@ -13,11 +13,11 @@ function github() {
       });
 }
 
-async function getOrganizationRepositories(after) {
+async function getOrganizationRepositories(organization, after) {
   return github()(
     `
 query OrganizationRepositories($after: String) {
- organization(login: "cumulusds") {
+ organization(login: ${JSON.stringify(organization)}) {
     repositories(first: 100, after: $after) {
       pageInfo {
         endCursor,
@@ -52,12 +52,12 @@ query OrganizationRepositories($after: String) {
   );
 }
 
-export default async function* generateOrganizationRepositories(): AsyncIterator<Repository> {
-  const firstPage = await getOrganizationRepositories();
+export default async function* generateOrganizationRepositories(organization: string): AsyncIterator<Repository> {
+  const firstPage = await getOrganizationRepositories(organization);
   yield* firstPage.organization.repositories.nodes.filter(node => !node.isArchived);
   let { pageInfo } = firstPage.organization.repositories;
   while (pageInfo.hasNextPage) {
-    const page = await getOrganizationRepositories(pageInfo.endCursor);
+    const page = await getOrganizationRepositories(organization, pageInfo.endCursor);
     yield* page.organization.repositories.nodes.filter(node => !node.isArchived);
     pageInfo = page.organization.repositories.pageInfo;
   }
