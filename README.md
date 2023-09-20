@@ -1,7 +1,6 @@
 # GitHub Vulnerable Repo Reporter
 
 [![ci-cd][ci-cd-badge]][ci-cd-url]
-[![Create Release][release-badge]][release-url]
 
 List the repositories owned by an organization that have a vulnerability alert.
 
@@ -61,6 +60,3 @@ This package is [MIT licensed](LICENSE).
 
 [ci-cd-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml
 [ci-cd-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml/badge.svg
-
-[release-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/release.yml
-[release-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/release.yml/badge.svg
