@@ -13,6 +13,9 @@
     "bin, lib",
     "package.json"
   ],
+  "bin": {
+    "repos": "bin/repos.js"
+  },
   "scripts": {
     "build": "yarn build:babel && yarn build:flow-copy-source && yarn build:license-checker",
     "build:babel": "rm -rf lib && babel src --out-dir lib --ignore test.js",
