@@ -6,7 +6,6 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-22.04
-    needs: unit
     timeout-minutes: 10
     steps:
       - name: Checkout
