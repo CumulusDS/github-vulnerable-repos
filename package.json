@@ -9,9 +9,8 @@
     "node": "^14.15.0 || ^16.17.0 || >=18.0.0"
   },
   "main": "lib/index.js",
-  "src": [
-    "bin, lib",
-    "package.json"
+  "files": [
+    "lib/**"
   ],
   "bin": {
     "repos": "bin/repos.js"
