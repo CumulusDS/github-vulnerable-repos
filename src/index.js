@@ -2,6 +2,9 @@
 
 import parseArgs from "minimist";
 import chalk from "chalk";
+// $FlowFixMe[untyped-import]
+import PDFDocument from "pdfkit";
+import fs from "fs";
 import generateVulnerableRepositories from "./generateVulnerableRepositories";
 import generateOrganizationRepositories from "./generateOrganizationRepositories";
 import renderVulnerableRepositoryToConsole from "./renderVulnerableRepositoryToConsole";
@@ -43,21 +46,35 @@ export default async function main() {
   console.log(now.toDateString());
   console.log();
 
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream("var/report.pdf"));
+
+  doc
+    .font("Helvetica-Bold")
+    .fontSize(16)
+    .text(`Open-Source Vulnerability Report for ${organization}`);
+  doc
+    .font("Helvetica")
+    .fontSize(8)
+    .text(now.toDateString());
+  doc.text("\n");
+
   let cleanRepositoryCount = 0;
   let vulnerableRepositoryCount = 0;
   let disabledRepositoryCount = 0;
   for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories(organization))) {
     const { hasVulnerabilityAlertsEnabled, vulnerabilities } = repository;
     if (vulnerabilities.length > 0) {
-      renderVulnerableRepositoryToConsole(repository);
+      renderVulnerableRepositoryToConsole(repository, doc);
       vulnerableRepositoryCount += 1;
     } else if (!hasVulnerabilityAlertsEnabled) {
-      renderVulnerableRepositoryToConsole(repository);
+      renderVulnerableRepositoryToConsole(repository, doc);
       disabledRepositoryCount += 1;
     } else {
       cleanRepositoryCount += 1;
     }
   }
+
   console.log(
     chalk`{bold Summary for all ${cleanRepositoryCount +
       vulnerableRepositoryCount +
@@ -68,4 +85,14 @@ export default async function main() {
     `\t${cleanRepositoryCount +
       vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
   );
+
+  doc
+    .font("Helvetica-Bold")
+    .text(`Summary for all ${cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount} repositories`);
+  doc.font("Helvetica").text(`    ${disabledRepositoryCount} skipped`);
+  doc.text(
+    `    ${cleanRepositoryCount +
+      vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
+  );
+  doc.end();
 }
