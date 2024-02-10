@@ -2,7 +2,6 @@
 
 import parseArgs from "minimist";
 import chalk from "chalk";
-// $FlowFixMe[untyped-import]
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import generateVulnerableRepositories from "./generateVulnerableRepositories";
@@ -16,29 +15,48 @@ function printHelp() {
     `List vulnerable repos - ${version}
 
 Options:
-\t-o, --organization STRING      - Give the organization. (required)
 \t-h, --help                     - Print this message.
+\t-o, --organization STRING      - Give the organization. (required)
+\t-r, --report STRING            - Output a PDF report to the given file.
 
 example:
-\trepos --organization MyOrg
+\trepos --organization MyOrg --report var/vulnerabilities-2024-02-09.pdf
 `
   );
 }
 
-export default async function main() {
+function createPDFReport(report: ?string): ?typeof PDFDocument {
+  if (report == null) return null;
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream(report));
+  return doc;
+}
+
+export default async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2), {
     alias: {
+      help: ["h"],
       organization: ["o"],
-      help: ["h"]
+      report: ["r"]
     },
     boolean: ["help"]
   });
 
-  const { organization } = args;
+  const { organization, report } = args;
 
-  if (args.help || typeof organization !== "string") {
+  if (args.help) {
     printHelp();
-    return;
+    return 1;
+  }
+  if (typeof organization !== "string") {
+    console.error(chalk`{red Missing required argument: --organization\n}`);
+    printHelp();
+    return 2;
+  }
+  if (report != null && typeof report !== "string") {
+    console.error(chalk`{red Invalid argument: --report requires a filename\n}`);
+    printHelp();
+    return 3;
   }
 
   const now = new Date();
@@ -46,18 +64,17 @@ export default async function main() {
   console.log(now.toDateString());
   console.log();
 
-  const doc = new PDFDocument();
-  doc.pipe(fs.createWriteStream("var/report.pdf"));
+  const doc = createPDFReport(report);
 
   doc
-    .font("Helvetica-Bold")
+    ?.font("Helvetica-Bold")
     .fontSize(16)
     .text(`Open-Source Vulnerability Report for ${organization}`);
   doc
-    .font("Helvetica")
+    ?.font("Helvetica")
     .fontSize(8)
     .text(now.toDateString());
-  doc.text("\n");
+  doc?.text("\n");
 
   let cleanRepositoryCount = 0;
   let vulnerableRepositoryCount = 0;
@@ -87,12 +104,14 @@ export default async function main() {
   );
 
   doc
-    .font("Helvetica-Bold")
+    ?.font("Helvetica-Bold")
     .text(`Summary for all ${cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount} repositories`);
-  doc.font("Helvetica").text(`    ${disabledRepositoryCount} skipped`);
-  doc.text(
+  doc?.font("Helvetica").text(`    ${disabledRepositoryCount} skipped`);
+  doc?.text(
     `    ${cleanRepositoryCount +
       vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
   );
-  doc.end();
+  doc?.end();
+
+  return 0;
 }
