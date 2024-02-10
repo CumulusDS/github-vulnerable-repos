@@ -44,6 +44,12 @@ The application reports on any repositories that have an open vulnerability aler
 
 You can enable vulnerability alerts across your organization on the "Configure security and analysis features" page.
 
+To output the report to a PDF file, use the `--report FILE` option. For example:
+
+```
+GITHUB_TOKEN=ghp... npx -q @cumulusds/github-vulnerable-repos --organization MyOrg --report MyVulnerabilityReport.pdf
+```
+
 [GitHub personal access token]: https://github.com/settings/tokens
 [create an access token]: https://github.com/settings/tokens/new
 
