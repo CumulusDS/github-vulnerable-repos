@@ -6,7 +6,7 @@
   "author": "Cumulus Digital Systems",
   "license": "MIT",
   "engines": {
-    "node": "^14.15.0 || ^16.17.0 || >=18.0.0"
+    "node": "^18.0.0 || ^20.0.0 || >=21.0.0"
   },
   "main": "lib/index.js",
   "files": [
@@ -20,7 +20,7 @@
     "build:babel": "rm -rf lib && babel src --out-dir lib --ignore test.js",
     "build:flow-copy-source": "flow-copy-source --ignore test.js src lib",
     "build:license-checker": "license-checker --csv --out var/licenses.csv",
-    "clean": "shx rm -rf lib",
+    "clean": "rm -rf lib",
     "git:commit": "git add package.json && git commit -m v${npm_package_version}",
     "git:push": "git push --follow-tags",
     "git:tag": "git tag -a v${npm_package_version} -m v${npm_package_version}",
