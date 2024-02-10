@@ -8,7 +8,6 @@ import type { VulnerableRepository } from "./generateVulnerableRepositories";
 import getAdvisories from "./getAdvisories";
 import { label, labelColor, labelText } from "./repository";
 
-// $FlowFixMe[unclear-type]
 export default function renderVulnerableRepositoryToConsole(
   repository: VulnerableRepository,
   doc: ?typeof PDFDocument
