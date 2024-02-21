@@ -27,7 +27,7 @@ query OrganizationRepositories($after: String) {
         isArchived,
         name,
         hasVulnerabilityAlertsEnabled,
-        vulnerabilityAlerts(first: 100) {
+        vulnerabilityAlerts(last: 100) {
           nodes {
             createdAt,
             dismissedAt,
