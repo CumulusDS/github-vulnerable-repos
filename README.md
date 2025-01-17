@@ -1,6 +1,6 @@
 # GitHub Vulnerable Repo Reporter
 
-[![ci-cd][ci-cd-badge]][ci-cd-url]
+[![ci-cd][unit-badge]][unit-url]
 
 List the repositories owned by an organization that have a vulnerability alert.
 
@@ -64,5 +64,5 @@ GITHUB_TOKEN=ghp... npx -q @cumulusds/github-vulnerable-repos --organization MyO
 
 This package is [MIT licensed](LICENSE).
 
-[ci-cd-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml
-[ci-cd-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/ci-cd.yml/badge.svg
+[unit-url]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/unit.yml
+[unit-badge]: https://github.com/CumulusDS/github-vulnerable-repos/actions/workflows/unit.yml/badge.svg

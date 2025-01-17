@@ -1,24 +1,12 @@
 name: Sync Labels
-
 on:
   push:
     branches:
       - master
     paths:
       - .github/labels.yml
-
 jobs:
   sync:
     name: Sync Labels
-    runs-on: ubuntu-22.04
-    timeout-minutes: 3
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Sync Labels
-        uses: b4b4r07/github-labeler@master
-        id: labeler
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: CumulusDS/workflows-public/.github/workflows/labels-sync.yml@master
+    secrets: inherit

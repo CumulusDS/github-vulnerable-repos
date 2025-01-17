@@ -1,0 +1,15 @@
+name: ci-cd
+
+on:
+  push:
+    branches:
+      - '**/*'
+  pull_request:
+  release:
+    types: [released]
+
+jobs:
+  unit:
+    name: Unit
+    uses: CumulusDS/workflows-public/.github/workflows/package-unit.yml@master
+    secrets: inherit
