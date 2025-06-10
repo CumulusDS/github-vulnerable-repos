@@ -27,9 +27,10 @@ describe("vulnerable-repos", () => {
             repositories: {
               pageInfo: { endCursor: "endCursor-1", hasNextPage: true },
               nodes: [
-                { name: "repo-1", hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } },
+                { name: "repo-1", isArchived: false, hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } },
                 {
                   name: "repo-2",
+                  isArchived: false,
                   hasVulnerabilityAlertsEnabled: true,
                   vulnerabilityAlerts: {
                     nodes: [
@@ -48,6 +49,7 @@ describe("vulnerable-repos", () => {
                 },
                 {
                   name: "repo-3",
+                  isArchived: false,
                   hasVulnerabilityAlertsEnabled: true,
                   vulnerabilityAlerts: {
                     nodes: [
@@ -67,7 +69,8 @@ describe("vulnerable-repos", () => {
                       }
                     ]
                   }
-                }
+                },
+                { name: "archived-repo", isArchived: true, hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } }
               ]
             }
           }
@@ -81,6 +84,7 @@ describe("vulnerable-repos", () => {
               nodes: [
                 {
                   name: "has-vulnerability-alerts",
+                  isArchived: false,
                   hasVulnerabilityAlertsEnabled: true,
                   vulnerabilityAlerts: {
                     nodes: [
@@ -131,6 +135,7 @@ describe("vulnerable-repos", () => {
                 },
                 {
                   name: "has-vulnerability-alerts-disabled",
+                  isArchived: false,
                   hasVulnerabilityAlertsEnabled: false,
                   vulnerabilityAlerts: {
                     nodes: []
@@ -212,23 +217,23 @@ describe("vulnerable-repos", () => {
       it("filters out vulnerabilities created after the date", async () => {
         process.argv.push("--as-of", "2023-09-17T19:35:30Z"); // 1 second before creation
         await main();
-        const logCalls = mockLog.mock.calls.map(c => c[0]);
-        expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
-        expect(logCalls).toContain(expect.stringContaining("Summary for all 5 repositories"));
-        expect(logCalls).toContain(expect.stringContaining("\t1 skipped"));
-        expect(logCalls).toContain(expect.stringContaining("\t4 scanned: 0 vulnerable, 4 clean"));
+        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        expect(output).not.toContain("has-vulnerability-alerts");
+        expect(output).toContain("Summary for all 5 repositories");
+        expect(output).toContain("\t1 skipped");
+        expect(output).toContain("\t4 scanned: 0 vulnerable, 4 clean");
       });
 
       it("includes vulnerabilities dismissed after the date", async () => {
         process.argv.push("--as-of", "2020-10-21T12:00:00Z");
         await main();
-        const logCalls = mockLog.mock.calls.map(c => c[0]);
-        expect(logCalls).toContain(expect.stringContaining("repo-2"));
-        expect(logCalls).toContain(expect.stringContaining("repo-3"));
-        expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
-        expect(logCalls).toContain(expect.stringContaining("Summary for all 5 repositories"));
-        expect(logCalls).toContain(expect.stringContaining("\t1 skipped"));
-        expect(logCalls).toContain(expect.stringContaining("\t4 scanned: 2 vulnerable, 2 clean"));
+        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        expect(output).toContain("repo-2");
+        expect(output).toContain("repo-3");
+        expect(output).not.toContain("has-vulnerability-alerts");
+        expect(output).toContain("Summary for all 5 repositories");
+        expect(output).toContain("\t1 skipped");
+        expect(output).toContain("\t4 scanned: 2 vulnerable, 2 clean");
       });
     });
   });
