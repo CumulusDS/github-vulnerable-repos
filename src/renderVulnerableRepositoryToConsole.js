@@ -10,9 +10,9 @@ import { label, labelColor, labelText } from "./repository";
 
 export default function renderVulnerableRepositoryToConsole(
   repository: VulnerableRepository,
-  doc: ?typeof PDFDocument
+  doc: ?typeof PDFDocument,
+  asOfDate: Date
 ): void {
-  const now = new Date();
   const { name, hasVulnerabilityAlertsEnabled } = repository;
   const advisories = getAdvisories(repository);
 
@@ -22,7 +22,7 @@ export default function renderVulnerableRepositoryToConsole(
   if (hasVulnerabilityAlertsEnabled) {
     advisories.forEach(({ createdAt, cve, ghsaId, severity, summary }) => {
       console.log(
-        `\t${cve?.padEnd(19) ?? ghsaId} ${label[severity]} ${summary} (${prettyMilliseconds(now - createdAt, {
+        `\t${cve?.padEnd(19) ?? ghsaId} ${label[severity]} ${summary} (${prettyMilliseconds(asOfDate - createdAt, {
           compact: true
         })})`
       );
@@ -33,7 +33,7 @@ export default function renderVulnerableRepositoryToConsole(
         .fillColor(labelColor[severity])
         .text(labelText[severity], { continued: true })
         .fillColor("black")
-        .text(` ${summary} (${prettyMilliseconds(now - createdAt, { compact: true })})`);
+        .text(` ${summary} (${prettyMilliseconds(asOfDate - createdAt, { compact: true })})`);
     });
   } else {
     console.log(chalk`{red \tVulnerability alerts are disabled}`);

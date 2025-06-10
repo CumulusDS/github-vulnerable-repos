@@ -18,6 +18,7 @@ Options:
 \t-h, --help                     - Print this message.
 \t-o, --organization STRING      - Give the organization. (required)
 \t-r, --report STRING            - Output a PDF report to the given file.
+\t--as-of DATE                   - Generate report as of a previous date.
 
 example:
 \trepos --organization MyOrg --report var/vulnerabilities-2024-02-09.pdf
@@ -39,10 +40,12 @@ export default async function main(): Promise<number> {
       organization: ["o"],
       report: ["r"]
     },
+    string: ["as-of"],
     boolean: ["help"]
   });
 
   const { organization, report } = args;
+  const asOf = args["as-of"];
 
   if (args.help) {
     printHelp();
@@ -59,7 +62,14 @@ export default async function main(): Promise<number> {
     return 3;
   }
 
-  const now = new Date();
+  const asOfDate = asOf != null ? new Date(asOf) : new Date();
+  if (asOf != null && Number.isNaN(asOfDate.getTime())) {
+    console.error(chalk`{red Invalid argument: --as-of requires a valid date string\n}`);
+    printHelp();
+    return 4;
+  }
+
+  const now = asOfDate;
   console.log(chalk`{bold Open-Source Vulnerability Report for ${organization}}`);
   console.log(now.toDateString());
   console.log();
@@ -79,13 +89,16 @@ export default async function main(): Promise<number> {
   let cleanRepositoryCount = 0;
   let vulnerableRepositoryCount = 0;
   let disabledRepositoryCount = 0;
-  for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories(organization))) {
+  for await (const repository of generateVulnerableRepositories(
+    generateOrganizationRepositories(organization),
+    now
+  )) {
     const { hasVulnerabilityAlertsEnabled, vulnerabilities } = repository;
     if (vulnerabilities.length > 0) {
-      renderVulnerableRepositoryToConsole(repository, doc);
+      renderVulnerableRepositoryToConsole(repository, doc, now);
       vulnerableRepositoryCount += 1;
     } else if (!hasVulnerabilityAlertsEnabled) {
-      renderVulnerableRepositoryToConsole(repository, doc);
+      renderVulnerableRepositoryToConsole(repository, doc, now);
       disabledRepositoryCount += 1;
     } else {
       cleanRepositoryCount += 1;

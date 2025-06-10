@@ -13,6 +13,12 @@ Use npx to run via command-line. The output lists repos with open security alert
 GITHUB_TOKEN=ghp... npx -q @cumulusds/github-vulnerable-repos --organization MyOrg
 ```
 
+To generate a report as of a previous date, use the `--as-of` option. This will show vulnerabilities that were open on that date.
+
+```shell
+GITHUB_TOKEN=ghp... npx -q @cumulusds/github-vulnerable-repos --organization MyOrg --as-of 2023-01-01
+```
+
 ```
 Open-Source Vulnerability Report for MyOrg
 Sun Sep 17 2023

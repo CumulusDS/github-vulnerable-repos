@@ -9,7 +9,8 @@ export type VulnerableRepository = {|
 |};
 
 export default async function* generateVulnerableRepositories(
-  repositories: AsyncIterator<Repository>
+  repositories: AsyncIterator<Repository>,
+  asOfDate: Date
 ): AsyncIterator<VulnerableRepository> {
   for await (const repository of repositories) {
     const {
@@ -18,9 +19,10 @@ export default async function* generateVulnerableRepositories(
       vulnerabilityAlerts: { nodes }
     } = repository;
     const vulnerabilities = nodes
-      .filter(({ dismissedAt }) => dismissedAt == null)
-      .filter(({ autoDismissedAt }) => autoDismissedAt == null)
-      .filter(({ fixedAt }) => fixedAt == null);
+      .filter(({ createdAt }) => new Date(createdAt) <= asOfDate)
+      .filter(({ dismissedAt }) => dismissedAt == null || new Date(dismissedAt) > asOfDate)
+      .filter(({ autoDismissedAt }) => autoDismissedAt == null || new Date(autoDismissedAt) > asOfDate)
+      .filter(({ fixedAt }) => fixedAt == null || new Date(fixedAt) > asOfDate);
     yield {
       name,
       hasVulnerabilityAlertsEnabled,
