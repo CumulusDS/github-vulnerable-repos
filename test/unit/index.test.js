@@ -144,7 +144,7 @@ describe("vulnerable-repos", () => {
                   }
                 },
                 {
-                  name: "has-vulnerability-alerts-disabled",
+                  name: "disabled-vulnerability-alerts",
                   isArchived: false,
                   hasVulnerabilityAlertsEnabled: false,
                   vulnerabilityAlerts: {
