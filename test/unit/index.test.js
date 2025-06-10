@@ -76,6 +76,29 @@ describe("vulnerable-repos", () => {
                   }
                 },
                 {
+                  name: "repo-4-fixed",
+                  isArchived: false,
+                  hasVulnerabilityAlertsEnabled: true,
+                  vulnerabilityAlerts: {
+                    nodes: [
+                      {
+                        createdAt: "2021-01-01T12:00:00Z",
+                        dismissedAt: null,
+                        autoDismissedAt: null,
+                        fixedAt: "2021-01-15T12:00:00Z",
+                        securityVulnerability: {
+                          advisory: {
+                            ghsaId: "id-fixed",
+                            summary: "summary-fixed",
+                            identifiers: []
+                          },
+                          severity: "MODERATE"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
                   name: "archived-repo",
                   isArchived: true,
                   hasVulnerabilityAlertsEnabled: true,
@@ -144,7 +167,7 @@ describe("vulnerable-repos", () => {
                   }
                 },
                 {
-                  name: "disabled-vulnerability-alerts",
+                  name: "repo-with-disabled-alerts",
                   isArchived: false,
                   hasVulnerabilityAlertsEnabled: false,
                   vulnerabilityAlerts: {
@@ -229,9 +252,9 @@ describe("vulnerable-repos", () => {
         await main();
         const output = mockLog.mock.calls.map(c => c[0]).join("\n");
         expect(output).not.toContain("has-vulnerability-alerts");
-        expect(output).toContain("Summary for all 5 repositories");
+        expect(output).toContain("Summary for all 6 repositories");
         expect(output).toContain("\t1 skipped");
-        expect(output).toContain("\t4 scanned: 0 vulnerable, 4 clean");
+        expect(output).toContain("\t5 scanned: 0 vulnerable, 5 clean");
       });
 
       it("includes vulnerabilities dismissed after the date", async () => {
@@ -241,9 +264,21 @@ describe("vulnerable-repos", () => {
         expect(output).toContain("repo-2");
         expect(output).toContain("repo-3");
         expect(output).not.toContain("has-vulnerability-alerts");
-        expect(output).toContain("Summary for all 5 repositories");
+        expect(output).toContain("Summary for all 6 repositories");
         expect(output).toContain("\t1 skipped");
-        expect(output).toContain("\t4 scanned: 2 vulnerable, 2 clean");
+        expect(output).toContain("\t5 scanned: 2 vulnerable, 3 clean");
+      });
+
+      it("includes vulnerabilities fixed after the date", async () => {
+        process.argv.push("--as-of", "2021-01-10T12:00:00Z");
+        await main();
+        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        expect(output).toContain("repo-3");
+        expect(output).toContain("repo-4-fixed");
+        expect(output).not.toContain("has-vulnerability-alerts");
+        expect(output).toContain("Summary for all 6 repositories");
+        expect(output).toContain("\t1 skipped");
+        expect(output).toContain("\t5 scanned: 2 vulnerable, 3 clean");
       });
     });
   });
