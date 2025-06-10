@@ -27,7 +27,12 @@ describe("vulnerable-repos", () => {
             repositories: {
               pageInfo: { endCursor: "endCursor-1", hasNextPage: true },
               nodes: [
-                { name: "repo-1", isArchived: false, hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } },
+                {
+                  name: "repo-1",
+                  isArchived: false,
+                  hasVulnerabilityAlertsEnabled: true,
+                  vulnerabilityAlerts: { nodes: [] }
+                },
                 {
                   name: "repo-2",
                   isArchived: false,
@@ -70,7 +75,12 @@ describe("vulnerable-repos", () => {
                     ]
                   }
                 },
-                { name: "archived-repo", isArchived: true, hasVulnerabilityAlertsEnabled: true, vulnerabilityAlerts: { nodes: [] } }
+                {
+                  name: "archived-repo",
+                  isArchived: true,
+                  hasVulnerabilityAlertsEnabled: true,
+                  vulnerabilityAlerts: { nodes: [] }
+                }
               ]
             }
           }
