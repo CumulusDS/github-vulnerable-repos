@@ -8,11 +8,16 @@ jest.mock("@octokit/graphql", () => ({
 }));
 
 describe("vulnerable-repos", () => {
+  let mockLog;
+  let mockError;
+
   beforeEach(() => {
+    mockLog = jest.fn();
+    mockError = jest.fn();
     // $FlowExpectedError[cannot-write]
-    console.log = jest.fn();
+    console.log = mockLog;
     // $FlowExpectedError[cannot-write]
-    console.error = jest.fn();
+    console.error = mockError;
     delete process.env.GITHUB_TOKEN;
     process.argv = ["node", "vulnerable-repos"];
     graphql
@@ -137,19 +142,19 @@ describe("vulnerable-repos", () => {
         })
       );
     graphql.defaults = jest.fn().mockReturnValue(graphql);
-    // $FlowFixMe[missing-method]
+    // $FlowFixMe[prop-missing]
     jest.useFakeTimers().setSystemTime(new Date("2023-10-27T12:00:00Z"));
   });
 
   it("shows help message when missing the --organization argument", async () => {
     await expect(main()).resolves.toBe(2);
-    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Options:"));
+    expect(mockLog).toHaveBeenCalledWith(expect.stringContaining("Options:"));
   });
 
   it("shows help message given the --help argument", async () => {
     process.argv.push("--help");
     expect(await main()).toBe(1);
-    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Options:"));
+    expect(mockLog).toHaveBeenCalledWith(expect.stringContaining("Options:"));
   });
 
   describe("with organization", () => {
@@ -176,8 +181,6 @@ describe("vulnerable-repos", () => {
 
     describe("with valid report", () => {
       beforeEach(() => {
-        // $FlowFixMe
-        console.log = jest.fn();
         process.argv.push("--report", "var/test.pdf");
       });
 
@@ -187,13 +190,11 @@ describe("vulnerable-repos", () => {
     describe("with invalid report", () => {
       beforeEach(() => {
         process.argv = ["node", "vulnerable-repos", "--organization", "MyOrg", "--report"];
-        // $FlowFixMe
-        console.log = jest.fn();
       });
 
       it("resolves", async () => {
         expect(await main()).toBe(3);
-        expect(console.error).toHaveBeenCalledWith(expect.stringContaining("--report requires a filename"));
+        expect(mockError).toHaveBeenCalledWith(expect.stringContaining("--report requires a filename"));
       });
     });
 
@@ -205,13 +206,13 @@ describe("vulnerable-repos", () => {
       it("shows an error for an invalid date", async () => {
         process.argv.push("--as-of", "not-a-date");
         expect(await main()).toBe(4);
-        expect(console.error).toHaveBeenCalledWith(expect.stringContaining("--as-of requires a valid date string"));
+        expect(mockError).toHaveBeenCalledWith(expect.stringContaining("--as-of requires a valid date string"));
       });
 
       it("filters out vulnerabilities created after the date", async () => {
         process.argv.push("--as-of", "2023-09-17T19:35:30Z"); // 1 second before creation
         await main();
-        const logCalls = (console.log: jest.Mock).mock.calls.map(c => c[0]);
+        const logCalls = mockLog.mock.calls.map(c => c[0]);
         expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
         expect(logCalls).toContain(expect.stringContaining("Summary for all 5 repositories"));
         expect(logCalls).toContain(expect.stringContaining("\t1 skipped"));
@@ -221,7 +222,7 @@ describe("vulnerable-repos", () => {
       it("includes vulnerabilities dismissed after the date", async () => {
         process.argv.push("--as-of", "2020-10-21T12:00:00Z");
         await main();
-        const logCalls = (console.log: jest.Mock).mock.calls.map(c => c[0]);
+        const logCalls = mockLog.mock.calls.map(c => c[0]);
         expect(logCalls).toContain(expect.stringContaining("repo-2"));
         expect(logCalls).toContain(expect.stringContaining("repo-3"));
         expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
