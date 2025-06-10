@@ -89,10 +89,7 @@ export default async function main(): Promise<number> {
   let cleanRepositoryCount = 0;
   let vulnerableRepositoryCount = 0;
   let disabledRepositoryCount = 0;
-  for await (const repository of generateVulnerableRepositories(
-    generateOrganizationRepositories(organization),
-    now
-  )) {
+  for await (const repository of generateVulnerableRepositories(generateOrganizationRepositories(organization), now)) {
     const { hasVulnerabilityAlertsEnabled, vulnerabilities } = repository;
     if (vulnerabilities.length > 0) {
       renderVulnerableRepositoryToConsole(repository, doc, now);
