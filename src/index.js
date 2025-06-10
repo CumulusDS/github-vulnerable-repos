@@ -62,7 +62,7 @@ export default async function main(): Promise<number> {
     return 3;
   }
 
-  const asOfDate = asOf != null ? new Date(asOf) : new Date();
+  const asOfDate = asOf != null ? new Date(String(asOf)) : new Date();
   if (asOf != null && Number.isNaN(asOfDate.getTime())) {
     console.error(chalk`{red Invalid argument: --as-of requires a valid date string\n}`);
     printHelp();

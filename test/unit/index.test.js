@@ -137,6 +137,7 @@ describe("vulnerable-repos", () => {
         })
       );
     graphql.defaults = jest.fn().mockReturnValue(graphql);
+    // $FlowFixMe[missing-method]
     jest.useFakeTimers().setSystemTime(new Date("2023-10-27T12:00:00Z"));
   });
 
@@ -210,7 +211,7 @@ describe("vulnerable-repos", () => {
       it("filters out vulnerabilities created after the date", async () => {
         process.argv.push("--as-of", "2023-09-17T19:35:30Z"); // 1 second before creation
         await main();
-        const logCalls = console.log.mock.calls.map(c => c[0]);
+        const logCalls = (console.log: jest.Mock).mock.calls.map(c => c[0]);
         expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
         expect(logCalls).toContain(expect.stringContaining("Summary for all 5 repositories"));
         expect(logCalls).toContain(expect.stringContaining("\t1 skipped"));
@@ -220,7 +221,7 @@ describe("vulnerable-repos", () => {
       it("includes vulnerabilities dismissed after the date", async () => {
         process.argv.push("--as-of", "2020-10-21T12:00:00Z");
         await main();
-        const logCalls = console.log.mock.calls.map(c => c[0]);
+        const logCalls = (console.log: jest.Mock).mock.calls.map(c => c[0]);
         expect(logCalls).toContain(expect.stringContaining("repo-2"));
         expect(logCalls).toContain(expect.stringContaining("repo-3"));
         expect(logCalls).not.toContain(expect.stringContaining("has-vulnerability-alerts"));
