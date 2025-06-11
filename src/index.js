@@ -62,7 +62,15 @@ export default async function main(): Promise<number> {
     return 3;
   }
 
-  const asOfDate = asOf != null ? new Date(String(asOf)) : new Date();
+  let asOfInput = asOf != null ? String(asOf) : null;
+  // When a date is given without a time (YYYY-MM-DD), it's interpreted as UTC midnight.
+  // This can cause off-by-one day errors in timezones behind UTC.
+  // Appending T00:00:00 makes it be interpreted in the local timezone.
+  if (asOfInput && /^\d{4}-\d{2}-\d{2}$/.test(asOfInput)) {
+    asOfInput = `${asOfInput}T00:00:00`;
+  }
+
+  const asOfDate = asOfInput != null ? new Date(asOfInput) : new Date();
   if (asOf != null && Number.isNaN(asOfDate.getTime())) {
     console.error(chalk`{red Invalid argument: --as-of requires a valid date string\n}`);
     printHelp();
