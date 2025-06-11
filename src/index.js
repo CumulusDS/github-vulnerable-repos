@@ -66,7 +66,7 @@ export default async function main(): Promise<number> {
   // When a date is given without a time (YYYY-MM-DD), it's interpreted as UTC midnight.
   // This can cause off-by-one day errors in timezones behind UTC.
   // Appending T00:00:00 makes it be interpreted in the local timezone.
-  if (asOfInput && /^\d{4}-\d{2}-\d{2}$/.test(asOfInput)) {
+  if (asOfInput != null && /^\d{4}-\d{2}-\d{2}$/.test(asOfInput)) {
     asOfInput = `${asOfInput}T00:00:00`;
   }
 
