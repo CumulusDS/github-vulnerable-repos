@@ -247,6 +247,13 @@ describe("vulnerable-repos", () => {
         expect(mockError).toHaveBeenCalledWith(expect.stringContaining("--as-of requires a valid date string"));
       });
 
+      it("handles date-only strings for --as-of", async () => {
+        process.argv.push("--as-of", "2023-10-26");
+        await main();
+        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        expect(output).toContain("Thu Oct 26 2023");
+      });
+
       it("filters out vulnerabilities created after the date", async () => {
         process.argv.push("--as-of", "2023-09-17T19:35:30Z"); // 1 second before creation
         await main();
