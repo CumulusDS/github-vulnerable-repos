@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true, // Emit .d.ts files, which flowgen converts to .js.flow files
+    "noEmit": false,
+    "outDir": "lib",
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}

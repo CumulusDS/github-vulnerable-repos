@@ -12,4 +12,6 @@ jobs:
   unit:
     name: Unit
     uses: CumulusDS/workflows-public/.github/workflows/package-unit.yml@master
+    with:
+      flow: "false"
     secrets: inherit

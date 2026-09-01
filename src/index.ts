@@ -1,5 +1,3 @@
-// @flow
-
 import parseArgs from "minimist";
 import chalk from "chalk";
 import PDFDocument from "pdfkit";
@@ -7,8 +5,8 @@ import fs from "fs";
 import generateVulnerableRepositories from "./generateVulnerableRepositories";
 import generateOrganizationRepositories from "./generateOrganizationRepositories";
 import renderVulnerableRepositoryToConsole from "./renderVulnerableRepositoryToConsole";
-// $FlowFixMe[untyped-import]
-import { version } from "../package.json";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { version } = require("../package.json");
 
 function printHelp() {
   console.log(
@@ -22,11 +20,11 @@ Options:
 
 example:
 \trepos --organization MyOrg --report var/vulnerabilities-2024-02-09.pdf
-`
+`,
   );
 }
 
-function createPDFReport(report: ?string): ?typeof PDFDocument {
+function createPDFReport(report: string | null): PDFKit.PDFDocument | null {
   if (report == null) return null;
   const doc = new PDFDocument();
   doc.pipe(fs.createWriteStream(report));
@@ -38,10 +36,10 @@ export default async function main(): Promise<number> {
     alias: {
       help: ["h"],
       organization: ["o"],
-      report: ["r"]
+      report: ["r"],
     },
     string: ["as-of"],
-    boolean: ["help"]
+    boolean: ["help"],
   });
 
   const { organization, report } = args;
@@ -82,16 +80,10 @@ export default async function main(): Promise<number> {
   console.log(now.toDateString());
   console.log();
 
-  const doc = createPDFReport(report);
+  const doc = createPDFReport(report ?? null);
 
-  doc
-    ?.font("Helvetica-Bold")
-    .fontSize(16)
-    .text(`Open-Source Vulnerability Report for ${organization}`);
-  doc
-    ?.font("Helvetica")
-    .fontSize(8)
-    .text(now.toDateString());
+  doc?.font("Helvetica-Bold").fontSize(16).text(`Open-Source Vulnerability Report for ${organization}`);
+  doc?.font("Helvetica").fontSize(8).text(now.toDateString());
   doc?.text("\n");
 
   let cleanRepositoryCount = 0;
@@ -111,14 +103,15 @@ export default async function main(): Promise<number> {
   }
 
   console.log(
-    chalk`{bold Summary for all ${cleanRepositoryCount +
-      vulnerableRepositoryCount +
-      disabledRepositoryCount} repositories}`
+    chalk`{bold Summary for all ${
+      cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount
+    } repositories}`,
   );
   console.log(`\t${disabledRepositoryCount} skipped`);
   console.log(
-    `\t${cleanRepositoryCount +
-      vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
+    `\t${
+      cleanRepositoryCount + vulnerableRepositoryCount
+    } scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`,
   );
 
   doc
@@ -126,8 +119,9 @@ export default async function main(): Promise<number> {
     .text(`Summary for all ${cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount} repositories`);
   doc?.font("Helvetica").text(`    ${disabledRepositoryCount} skipped`);
   doc?.text(
-    `    ${cleanRepositoryCount +
-      vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
+    `    ${
+      cleanRepositoryCount + vulnerableRepositoryCount
+    } scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`,
   );
   doc?.end();
 
