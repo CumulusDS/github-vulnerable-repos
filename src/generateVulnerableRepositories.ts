@@ -1,22 +1,20 @@
-// @flow
-
 import type { RepositoryVulnerabilityAlert, Repository } from "./repository";
 
-export type VulnerableRepository = {|
-  name: string,
-  hasVulnerabilityAlertsEnabled: boolean,
-  vulnerabilities: $ReadOnlyArray<RepositoryVulnerabilityAlert>
-|};
+export type VulnerableRepository = {
+  name: string;
+  hasVulnerabilityAlertsEnabled: boolean;
+  vulnerabilities: readonly RepositoryVulnerabilityAlert[];
+};
 
 export default async function* generateVulnerableRepositories(
-  repositories: AsyncIterator<Repository>,
-  asOfDate: Date
-): AsyncIterator<VulnerableRepository> {
+  repositories: AsyncIterable<Repository>,
+  asOfDate: Date,
+): AsyncGenerator<VulnerableRepository> {
   for await (const repository of repositories) {
     const {
       name,
       hasVulnerabilityAlertsEnabled,
-      vulnerabilityAlerts: { nodes }
+      vulnerabilityAlerts: { nodes },
     } = repository;
     const vulnerabilities = nodes
       .filter(({ createdAt }) => new Date(createdAt) <= asOfDate)
@@ -26,7 +24,7 @@ export default async function* generateVulnerableRepositories(
     yield {
       name,
       hasVulnerabilityAlertsEnabled,
-      vulnerabilities
+      vulnerabilities,
     };
   }
 }

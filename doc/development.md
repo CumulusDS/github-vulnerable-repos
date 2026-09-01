@@ -5,16 +5,14 @@
 - `dist/` is for compiled modules that can be used with other systems.
 - `doc/` is for markdown documentation of the project and related concepts.
 - `env/` is for any environment that is needed for testing
-- `flow-typed/` has library definitions for flow. The `flow-typed/npm` files are generated or community-supplied files. Nevertheless, these files must be included in source control.
 - `lib/` is the compiled (portable) library code that will be linked into dependent projects.
 - `scripts/` is for any utility scripts used for development of the module.
-- `src/` has the production source files. The files will be compiled by babel.
+- `src/` has the production source files. The files will be compiled by the TypeScript compiler.
 - `test/` has the project's tests
 - `test/unit` is for unit tests. Its structure should parallel `/src`.
 - `test/integration` is for integration tests.
 - `var` collects build artifacts to be archived with the GitHub actions build, but not committed to source control or included with the release package.
 - `var/coverage/test` istanbul code-coverage output, produced by `yarn test:unit`. Open `var/coverage/test/lcov-report/index.html` to see the detailed code-coverage report from the most recent test run.
-- `var/coverage/flow` flow-coverage-report output, produced by `yarn flow:coverage-report`. Open `var/coverage/flow/index.html` to see the detailed code-coverage report from the most recent test run.
 
 Prefer to organize subdirectories of `/src` as modules with cohesive purposes, instead of organizing by software design pattern. We should have "plant", "maintenance", "settings" modules instead of buckets of "components", "containers" and "reducers".
 
@@ -98,9 +96,9 @@ For others, we've included a .prettierrc. It has not been extensively tested aga
 
 Several commands are defined by the package.json scripts.
 
-`yarn test` runs the comprehensive set of automated tests. This includes the jest unit test, flow and eslint checks.
+`yarn test` runs the comprehensive set of automated tests. This includes the jest unit test, TypeScript and eslint checks.
 
-`yarn flow:status` checks for flow type and lint errors. It is one of the checks included in `yarn test`.
+`yarn test:tsc` checks for TypeScript type errors in `src` and `test`. It is one of the checks included in `yarn test`.
 
 `yarn git:push` pushes commits and tags to GitHub.
 
@@ -162,68 +160,52 @@ A project-local installation is used, instead of a global installation. [Prettie
 
 The project Prettier configuration file is consistently used, instead of command-line configuration. Centralizing follows the "don't repeat yourself" rule of thumb. Centralization ensures that scripts, IDE configuration and any future method for invoking Prettier stay synchronized with the project's style standard.
 
-## Flow
+## TypeScript
 
-Flow is configured to use [flow-typed](https://github.com/flowtype/flow-typed) repository of libdefs (type definitions). These libdefs are be checked-into this repository because flow-typed libdefs are not pinned by a package version. It is undesirable to receive a new libdef for a dependency that has not changed, because [it could introduce a spurrious type-check failure.](https://github.com/flowtype/flow-typed/wiki/FAQs#why-do-i-need-to-commit-the-libdefs-that-flow-typed-installs-for-my-project) To maintain the flow-typed libdefs, run `yarn flow-typed install` after changing the package dependencies.
+TypeScript is configured by [tsconfig.json](../tsconfig.json), which type-checks both `src` and `test` without emitting. The [tsconfig.build.json](../tsconfig.build.json) configuration extends it to compile `src` into `lib` along with the `.d.ts` declarations.
 
-The eslint-plugin-flowtype package integrates ESLint with Flow.
+Type definitions for dependencies come from the packages themselves or from the DefinitelyTyped `@types/*` packages listed in the `devDependencies`. Unlike flow-typed libdefs, these are pinned by the yarn lockfile, so they do not need to be checked into this repository.
 
-The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](webstorm-flow.png)
+The `@typescript-eslint` packages integrate ESLint with TypeScript.
 
 ### Lint
 
-[Flow’s linter](https://flow.org/en/docs/linting/) encourages developers to add tight type annotations. For example, it can be convenient to use the `any` type when a mock will only satisfy part of an interface. In this case, the tested function has an `Axios` instance argument, but we know that the function only really depends on a single method, `post`. When listing is enabled, we see a diagnostic for `any`. In this case, we can confirm that we think that we know what we’re doing by suppressing the lint diagnostic with a `flowlint-line` directive.
+TypeScript encourages developers to add tight type annotations. For example, it can be convenient to use the `any` type when a mock will only satisfy part of an interface. In this case, we can confirm that we think that we know what we’re doing by suppressing the lint diagnostic with an `eslint-disable-next-line` directive.
 
-```js
-const client: any = { post }; // flowlint-line unclear-type:off
+```ts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client: any = { post };
 ```
 
 ### Build
 
-Babel compiles the project to prepares Node-compatible javascript. The [babelrc](.babelrc.js) file configures the flow compiler and the target Node version, 10.15.0.
+The TypeScript compiler prepares Node-compatible javascript in `lib`. Jest transforms the source with babel; the [babelrc](../.babelrc.js) file configures `@babel/preset-typescript` and the target Node version, 10.15.0.
+
+Published packages also carry Flow libdefs, so that projects that still use Flow can consume this package. `yarn build:flowtypes` runs [flowgen](https://github.com/joarwilk/flowgen) over the emitted `.d.ts` files to produce the matching `.js.flow` files. The `prepack` script runs the build and the libdef generation, so both run automatically when the package is published.
 
 # Quality
 
 High unit test coverage is essential for the sustainability of the software systems that we create. Unit test coverage gives us the ability to confidently refactor our software modules. High unit test coverage is a good indication that SOLID principles are being adhered to in the code-base; when getting test coverage for a module is hard, then it’s usually a sign that the module is serving more than one concern or is too tightly coupled to other modules. Test coverage is essential for software modules that will be reused in more than one context.
 
-[Flow](https://flow.org/en/) is used to declare interface types. Libraries should use static type checking, because it provides users with helpful auto-completions in the IDE. These hints reduce typos and make it easier to discover the library's functionality and correctly use its interface. Type checking can also expose interface errors that are undetected in unit testing due to mocks.
+[TypeScript](https://www.typescriptlang.org/) is used to declare interface types. Libraries should use static type checking, because it provides users with helpful auto-completions in the IDE. These hints reduce typos and make it easier to discover the library's functionality and correctly use its interface. Type checking can also expose interface errors that are undetected in unit testing due to mocks.
 
-To invoke the test suite, run `yarn test`. This runs ESLint, the Jest unit tests and the Flow type checker.
+To invoke the test suite, run `yarn test`. This runs ESLint, the Jest unit tests and the TypeScript type checker.
 
 ## ESLint
 
 ESLint is used to enforce the [Airbnb Style Guid](https://github.com/airbnb/javascript). The burden of the style guidelines are eased through automated correction. The Prettier package helps the IDE automatically improve the formatting of the source code. The husky git hook automatically corrects some other ESLint issues when adding.
 
-## Flow
+## TypeScript
 
-The eslint-plugin-flowtype package integrates ESLint with Flow.
+The `@typescript-eslint` packages integrate ESLint with TypeScript.
 
-The WebStorm IDE uses flow to improve navigation, code completion and type hinting. It can also show type-checking errors inline, just like syntax or lint errors. [Configure WebStorm for Flow](https://blog.jetbrains.com/webstorm/2016/11/using-flow-in-webstorm/) by using Preferences / Languages & Frameworks / Javascript. Set the language version to Flow and enable "Type checking". ![WebStorm Flow Configuration](webstorm-flow.png)
-
-### flow-typed
-
-Community-built library definitions are provided by the [flow-typed](https://github.com/flowtype/flow-typed) package. These library definitions are be checked-into this repository under flow-typed/npm because flow-typed libdefs are not pinned by a package version. It is undesirable to receive a new libdef for a dependency that has not changed, because [it could introduce a spurrious type-check failure.](https://github.com/flowtype/flow-typed/wiki/FAQs#why-do-i-need-to-commit-the-libdefs-that-flow-typed-installs-for-my-project) To maintain the flow-typed libdefs, run `yarn flow-typed install` after changing the package dependencies.
-
-### Lint
-
-[Flow’s linter](https://flow.org/en/docs/linting/) encourages developers to add tight type annotations. For example, it can be convenient to use the `any` type when a mock will only satisfy part of an interface. In this case, the tested function has an `Axios` instance argument, but we know that the function only really depends on a single method, `post`. When listing is enabled, we see a diagnostic for `any`. In this case, we can confirm that we think that we know what we’re doing by suppressing the lint diagnostic with a `flowlint-line` directive.
-
-```js
-const client: any = { post }; // flowlint-line unclear-type:off
-```
-
-By default, lint is not enabled. Enable lint using [.flowconfig](.flowconfig):
-
-```ini
-[lints]
-all=error
-```
+The WebStorm IDE uses TypeScript to improve navigation, code completion and type hinting. It also shows type-checking errors inline, just like syntax or lint errors.
 
 ### Rationale
 
-A problem with javascript is that unit tests are often narrowly mocked. This can keep the unit tests easy to write, very fast and avoids introducing too many details of the partners of the test subject. But the downside is that compliance to interfaces ends up not being checked until runtime. So flow type annotations allow the compiler to check whether the program adheres to a consistent set of interfaces.
+A problem with javascript is that unit tests are often narrowly mocked. This can keep the unit tests easy to write, very fast and avoids introducing too many details of the partners of the test subject. But the downside is that compliance to interfaces ends up not being checked until runtime. So type annotations allow the compiler to check whether the program adheres to a consistent set of interfaces.
 
-It is relatively easy to learn to write the type annotations, and the diagnostic output of the flow compiler is helpful. This baseline configuration is quite picky, because the flow "linter" is enabled. Also, tests are type-checked and linted (working from the perspective that interface agreement is quite important in tests). The flow linter strongly encourages the developers to add type annotations everywhere where the type cannot be inferred. We'll need to reconsider whether the pickiness is tolerable after living with it for a few weeks. Since type-checking is not a native part of javascript, there tends to be more type friction around external libraries than there would be in a strongly typed language. The flow-typed library partially mitigates this friction.
+The compiler runs in `strict` mode, so the developer is required to add type annotations everywhere that the type cannot be inferred. Tests are type-checked as well as production code, working from the perspective that interface agreement is quite important in tests. Since type-checking is not a native part of javascript, there tends to be more type friction around external libraries than there would be in a strongly typed language. The DefinitelyTyped `@types/*` packages partially mitigate this friction.
 
 ## Jest
 
