@@ -4,7 +4,7 @@ import { graphql } from "@octokit/graphql";
 import main from "../../src";
 
 jest.mock("@octokit/graphql", () => ({
-  graphql: jest.fn()
+  graphql: jest.fn(),
 }));
 
 describe("vulnerable-repos", () => {
@@ -31,7 +31,7 @@ describe("vulnerable-repos", () => {
                   name: "repo-1",
                   isArchived: false,
                   hasVulnerabilityAlertsEnabled: true,
-                  vulnerabilityAlerts: { nodes: [] }
+                  vulnerabilityAlerts: { nodes: [] },
                 },
                 {
                   name: "repo-2",
@@ -46,11 +46,11 @@ describe("vulnerable-repos", () => {
                         fixedAt: null,
                         securityVulnerability: {
                           advisory: { ghsaId: "id-1", summary: "summary-1", identifiers: [] },
-                          severity: "HIGH"
-                        }
-                      }
-                    ]
-                  }
+                          severity: "HIGH",
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   name: "repo-3",
@@ -67,13 +67,13 @@ describe("vulnerable-repos", () => {
                           advisory: {
                             ghsaId: "id-2",
                             summary: "summary-2",
-                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }],
                           },
-                          severity: "CRITICAL"
-                        }
-                      }
-                    ]
-                  }
+                          severity: "CRITICAL",
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   name: "repo-4-fixed",
@@ -90,24 +90,24 @@ describe("vulnerable-repos", () => {
                           advisory: {
                             ghsaId: "id-fixed",
                             summary: "summary-fixed",
-                            identifiers: []
+                            identifiers: [],
                           },
-                          severity: "MODERATE"
-                        }
-                      }
-                    ]
-                  }
+                          severity: "MODERATE",
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   name: "archived-repo",
                   isArchived: true,
                   hasVulnerabilityAlertsEnabled: true,
-                  vulnerabilityAlerts: { nodes: [] }
-                }
-              ]
-            }
-          }
-        })
+                  vulnerabilityAlerts: { nodes: [] },
+                },
+              ],
+            },
+          },
+        }),
       )
       .mockReturnValueOnce(
         Promise.resolve({
@@ -130,10 +130,10 @@ describe("vulnerable-repos", () => {
                           advisory: {
                             ghsaId: "id-2",
                             summary: "summary-2",
-                            identifiers: []
+                            identifiers: [],
                           },
-                          severity: "HIGH"
-                        }
+                          severity: "HIGH",
+                        },
                       },
                       {
                         createdAt: "2023-09-17T19:35:31Z",
@@ -144,10 +144,10 @@ describe("vulnerable-repos", () => {
                           advisory: {
                             ghsaId: "id-3",
                             summary: "summary-3",
-                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }],
                           },
-                          severity: "LOW"
-                        }
+                          severity: "LOW",
+                        },
                       },
                       {
                         createdAt: "2023-09-17T19:35:31Z",
@@ -158,26 +158,26 @@ describe("vulnerable-repos", () => {
                           advisory: {
                             ghsaId: "id-4",
                             summary: "summary-4",
-                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }]
+                            identifiers: [{ type: "CVE", value: "CVE-2023-12345" }],
                           },
-                          severity: "HIGH"
-                        }
-                      }
-                    ]
-                  }
+                          severity: "HIGH",
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   name: "repo-with-disabled-alerts",
                   isArchived: false,
                   hasVulnerabilityAlertsEnabled: false,
                   vulnerabilityAlerts: {
-                    nodes: []
-                  }
-                }
-              ]
-            }
-          }
-        })
+                    nodes: [],
+                  },
+                },
+              ],
+            },
+          },
+        }),
       );
     graphql.defaults = jest.fn().mockReturnValue(graphql);
     // $FlowFixMe[prop-missing]
@@ -209,8 +209,8 @@ describe("vulnerable-repos", () => {
         await main();
         expect(graphql.defaults).toHaveBeenCalledWith({
           headers: {
-            authorization: `token abcd`
-          }
+            authorization: `token abcd`,
+          },
         });
       });
     });
@@ -250,14 +250,14 @@ describe("vulnerable-repos", () => {
       it("handles date-only strings for --as-of", async () => {
         process.argv.push("--as-of", "2023-10-26");
         await main();
-        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        const output = mockLog.mock.calls.map((c) => c[0]).join("\n");
         expect(output).toContain("Thu Oct 26 2023");
       });
 
       it("filters out vulnerabilities created after the date", async () => {
         process.argv.push("--as-of", "2023-09-17T19:35:30Z"); // 1 second before creation
         await main();
-        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        const output = mockLog.mock.calls.map((c) => c[0]).join("\n");
         expect(output).not.toContain("has-vulnerability-alerts");
         expect(output).toContain("Summary for all 6 repositories");
         expect(output).toContain("\t1 skipped");
@@ -267,7 +267,7 @@ describe("vulnerable-repos", () => {
       it("includes vulnerabilities dismissed after the date", async () => {
         process.argv.push("--as-of", "2020-10-21T12:00:00Z");
         await main();
-        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        const output = mockLog.mock.calls.map((c) => c[0]).join("\n");
         expect(output).toContain("repo-2");
         expect(output).toContain("repo-3");
         expect(output).not.toContain("has-vulnerability-alerts");
@@ -279,7 +279,7 @@ describe("vulnerable-repos", () => {
       it("includes vulnerabilities fixed after the date", async () => {
         process.argv.push("--as-of", "2021-01-10T12:00:00Z");
         await main();
-        const output = mockLog.mock.calls.map(c => c[0]).join("\n");
+        const output = mockLog.mock.calls.map((c) => c[0]).join("\n");
         expect(output).toContain("repo-3");
         expect(output).toContain("repo-4-fixed");
         expect(output).not.toContain("has-vulnerability-alerts");
