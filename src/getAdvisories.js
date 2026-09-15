@@ -21,12 +21,20 @@ function order(left: Advisory, right: Advisory) {
 export default function getAdvisories(repository: VulnerableRepository): $ReadOnlyArray<Advisory> {
   const { vulnerabilities } = repository;
   return vulnerabilities
-    .map(({ createdAt, securityVulnerability: { advisory: { ghsaId, summary, identifiers }, severity } }) => ({
-      createdAt: new Date(createdAt),
-      cve: identifiers.find(({ type }) => type === "CVE")?.value,
-      ghsaId,
-      severity,
-      summary
-    }))
+    .map(
+      ({
+        createdAt,
+        securityVulnerability: {
+          advisory: { ghsaId, summary, identifiers },
+          severity,
+        },
+      }) => ({
+        createdAt: new Date(createdAt),
+        cve: identifiers.find(({ type }) => type === "CVE")?.value,
+        ghsaId,
+        severity,
+        summary,
+      }),
+    )
     .sort(order);
 }

@@ -5,10 +5,10 @@ module.exports = {
     "linebreak-style": "off",
     "no-console": "off",
     "no-restricted-syntax": "off",
-    "no-await-in-loop": "off"
+    "no-await-in-loop": "off",
   },
   plugins: ["jest", "flowtype"],
   env: {
-    "jest/globals": true
-  }
+    "jest/globals": true,
+  },
 };

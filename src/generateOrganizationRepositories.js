@@ -8,8 +8,8 @@ function github() {
     ? graphql
     : graphql.defaults({
         headers: {
-          authorization: `token ${process.env.GITHUB_TOKEN}`
-        }
+          authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
       });
 }
 
@@ -48,17 +48,17 @@ query OrganizationRepositories($after: String) {
   }
 }
 `,
-    { after }
+    { after },
   );
 }
 
 export default async function* generateOrganizationRepositories(organization: string): AsyncIterator<Repository> {
   const firstPage = await getOrganizationRepositories(organization);
-  yield* firstPage.organization.repositories.nodes.filter(node => !node.isArchived);
+  yield* firstPage.organization.repositories.nodes.filter((node) => !node.isArchived);
   let { pageInfo } = firstPage.organization.repositories;
   while (pageInfo.hasNextPage) {
     const page = await getOrganizationRepositories(organization, pageInfo.endCursor);
-    yield* page.organization.repositories.nodes.filter(node => !node.isArchived);
+    yield* page.organization.repositories.nodes.filter((node) => !node.isArchived);
     pageInfo = page.organization.repositories.pageInfo;
   }
 }
