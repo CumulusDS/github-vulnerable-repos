@@ -34,26 +34,9 @@
     "test": "yarn test:flow:status && yarn test:lint && yarn test:prettier && yarn test:flow:coverage-report && yarn test:jest",
     "test:flow:coverage-report": "flow-coverage-report -i 'src/**/*.js' -x 'test/**/*.js' -t html -t text --threshold 79 --output-dir var/coverage/flow",
     "test:flow:status": "flow status",
-    "test:jest": "jest --color",
+    "test:jest": "jest --color --coverage",
     "test:lint": "eslint *.js src test",
     "test:prettier": "prettier --list-different \"{src,test}/**/*.{js,jsx,yml}\" \"*.{js,yml}\""
-  },
-  "jest": {
-    "verbose": true,
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "testEnvironment": "node",
-    "coverageDirectory": "var/coverage/test",
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    }
   },
   "dependencies": {
     "@octokit/graphql": "^4.8.0",
