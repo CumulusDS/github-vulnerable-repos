@@ -7,21 +7,21 @@ export const label: {| CRITICAL: string, HIGH: string, LOW: string, MODERATE: st
   CRITICAL: chalk`{red CRITICAL}`,
   HIGH: chalk`{magenta     HIGH}`,
   MODERATE: chalk`{green MODERATE}`,
-  LOW: chalk`{cyan      LOW}`
+  LOW: chalk`{cyan      LOW}`,
 };
 
 export const labelText: {| CRITICAL: string, HIGH: string, LOW: string, MODERATE: string |} = {
   CRITICAL: ` CRITICAL`,
   HIGH: `     HIGH`,
   MODERATE: ` MODERATE`,
-  LOW: `      LOW`
+  LOW: `      LOW`,
 };
 
 export const labelColor: {| CRITICAL: string, HIGH: string, LOW: string, MODERATE: string |} = {
   CRITICAL: `red`,
   HIGH: `magenta`,
   MODERATE: `green`,
-  LOW: `cyan`
+  LOW: `cyan`,
 };
 
 export type Severity = $Keys<typeof label>;
@@ -29,7 +29,7 @@ export type Severity = $Keys<typeof label>;
 // See https://docs.github.com/en/graphql/reference/objects#securityadvisoryidentifier
 export type SecurityAdvisoryIdentifier = {|
   type: string,
-  value: string
+  value: string,
 |};
 
 // See https://docs.github.com/en/graphql/reference/objects#repositoryvulnerabilityalert
@@ -40,8 +40,8 @@ export type RepositoryVulnerabilityAlert = {|
   fixedAt: ?string,
   securityVulnerability: {
     advisory: { ghsaId: string, summary: string, identifiers: $ReadOnlyArray<SecurityAdvisoryIdentifier> },
-    severity: Severity
-  }
+    severity: Severity,
+  },
 |};
 
 export type Repository = {|
@@ -49,6 +49,6 @@ export type Repository = {|
   name: string,
   hasVulnerabilityAlertsEnabled: boolean,
   vulnerabilityAlerts: {|
-    nodes: RepositoryVulnerabilityAlert[]
-  |}
+    nodes: RepositoryVulnerabilityAlert[],
+  |},
 |};

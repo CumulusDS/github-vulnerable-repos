@@ -22,7 +22,7 @@ Options:
 
 example:
 \trepos --organization MyOrg --report var/vulnerabilities-2024-02-09.pdf
-`
+`,
   );
 }
 
@@ -38,10 +38,10 @@ export default async function main(): Promise<number> {
     alias: {
       help: ["h"],
       organization: ["o"],
-      report: ["r"]
+      report: ["r"],
     },
     string: ["as-of"],
-    boolean: ["help"]
+    boolean: ["help"],
   });
 
   const { organization, report } = args;
@@ -84,14 +84,8 @@ export default async function main(): Promise<number> {
 
   const doc = createPDFReport(report);
 
-  doc
-    ?.font("Helvetica-Bold")
-    .fontSize(16)
-    .text(`Open-Source Vulnerability Report for ${organization}`);
-  doc
-    ?.font("Helvetica")
-    .fontSize(8)
-    .text(now.toDateString());
+  doc?.font("Helvetica-Bold").fontSize(16).text(`Open-Source Vulnerability Report for ${organization}`);
+  doc?.font("Helvetica").fontSize(8).text(now.toDateString());
   doc?.text("\n");
 
   let cleanRepositoryCount = 0;
@@ -111,14 +105,15 @@ export default async function main(): Promise<number> {
   }
 
   console.log(
-    chalk`{bold Summary for all ${cleanRepositoryCount +
-      vulnerableRepositoryCount +
-      disabledRepositoryCount} repositories}`
+    chalk`{bold Summary for all ${
+      cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount
+    } repositories}`,
   );
   console.log(`\t${disabledRepositoryCount} skipped`);
   console.log(
-    `\t${cleanRepositoryCount +
-      vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
+    `\t${
+      cleanRepositoryCount + vulnerableRepositoryCount
+    } scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`,
   );
 
   doc
@@ -126,8 +121,9 @@ export default async function main(): Promise<number> {
     .text(`Summary for all ${cleanRepositoryCount + vulnerableRepositoryCount + disabledRepositoryCount} repositories`);
   doc?.font("Helvetica").text(`    ${disabledRepositoryCount} skipped`);
   doc?.text(
-    `    ${cleanRepositoryCount +
-      vulnerableRepositoryCount} scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`
+    `    ${
+      cleanRepositoryCount + vulnerableRepositoryCount
+    } scanned: ${vulnerableRepositoryCount} vulnerable, ${cleanRepositoryCount} clean`,
   );
   doc?.end();
 
